@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Footer from '../Footer';
 import { Container, Row, Button } from 'reactstrap';
 import PsHeader from '../PsHeader';

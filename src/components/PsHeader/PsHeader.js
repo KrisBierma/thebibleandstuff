@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Button } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './PsHeader.css';
 
@@ -23,7 +23,8 @@ const PsHeader = (props) => (
           {/* combine faq with main about page */}
           {/* <li><Link to='/PsalmsFAQ'>FAQs</Link></li> */}
           {/* add portfolio link to main about page */}
-          <Button tag={Link} to='krisbierma.com'>Kris's Portfolio</Button>
+          <a className='btn' target='_blank' rel="noopener noreferrer" href='http://www.krisbierma.com'>Kris' Portfolio</a>
+          {/* <Button tag={Link} to='http://www.krisbierma.com' target='_blank'>Kris's Portfolio</Button> */}
           {/* <li><Link to="/">Kris's Portfolio</Link></li> */}
         {/* </ul> */}
         </Row>

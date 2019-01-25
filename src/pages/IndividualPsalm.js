@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Button } from 'reactstrap';
 // import axios from 'axios';
 import PsHeader from '../components/PsHeader';
 import Footer from '../components/Footer';
@@ -7,20 +7,20 @@ import Footer from '../components/Footer';
 import PsalmTableData from '../components/psalmTableData';
 import PsChap from '../components/PsChap';
 import PsWordCountTable from '../components/PsWordCountTable';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class IndividualPsalm extends Component {
   constructor(props){
     super(props);
     this.state = {
-      author: '',
-      book: '',
-      firstVerse: '',
-      headings: '',
+      // author: '',
+      // book: '',
+      // firstVerse: '',
+      // headings: '',
       chapterNum: this.props.match.params.chapterNum,
-      summary: '',
-      topic: '',
-      wholeChapeter: '',
+      // summary: '',
+      // topic: '',
+      // wholeChapeter: '',
       freq:[],
       freq2:[],
       frequentPhrases: [],
@@ -60,26 +60,28 @@ class IndividualPsalm extends Component {
 
   // works with Button link (which changes the url) to reset state with the next psalms info. the component refreshes but does not remount
   whichPsalm(whichOne) {
+    // console.log(this.state.chapterNum)
     this.setState({
-      author: '',
-      book: '',
-      firstVerse: '',
-      headings: '',
+      // author: '',
+      // book: '',
+      // firstVerse: '',
+      // headings: '',
       chapterNum: whichOne,
-      summary: '',
-      topic: '',
+      // summary: '',
+      // topic: '',
       wholeChapeter: '',
-      freq:[],
-      freq2:[],
-      frequentPhrases: [],
-      frequentPhrasesTitle: ''
+      // freq:[],
+      // freq2:[],
+      // frequentPhrases: [],
+      // frequentPhrasesTitle: ''
     });
   }
 
   render() {
   const next = parseInt(this.props.match.params.chapterNum) + 1;
   const previous = parseInt(this.props.match.params.chapterNum) - 1;
-  console.log(this.state.chapterNum)
+  // console.log(this.state.chapterNum)
+  // console.log(this.state)
     return(
       <Container>
         <PsHeader heading={`Psalm ${this.state.chapterNum}`} />

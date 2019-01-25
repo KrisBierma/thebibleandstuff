@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Button, Row, ButtonGroup } from 'reactstrap';
+import { Button, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 const Header = (props) => (

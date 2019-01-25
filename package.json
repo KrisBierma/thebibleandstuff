@@ -2,9 +2,10 @@
   "name": "thebibleandstuff",
   "version": "0.1.0",
   "private": true,
-  "homepage": "www.thebibleandstuff.com",
   "dependencies": {
     "axios": "^0.18.0",
+    "connect": "^3.6.6",
+    "connect-history-api-fallback": "^1.6.0",
     "firebase": "^5.8.0",
     "history": "^4.7.2",
     "react": "^16.7.0",

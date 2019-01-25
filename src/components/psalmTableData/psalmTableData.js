@@ -16,26 +16,70 @@ class PsalmTableData extends Component {
       headings: '',
       chapterNum: this.props.chapterNum,
       summary: '',
-      topic: ''
+      topic: '',
+      key: ''
     }
+    this.getData = this.getData.bind(this);
+    // this.getit = this.getit.bind(this);
+    // this.getKey = this.getKey.bind(this);
   };
 
-  componentDidMount(){
+  componentDidMount() {
+    this.getData();
+  }
+  
+  componentDidUpdate() {
+    console.log(this.props.chapterNum, this.state.chapterNum)
+    if (this.props.chapterNum !== this.state.chapterNum){
+      this.setState({
+        chapterNum: this.props.chapterNum
+      }, () => {
+        console.log('here')
+        this.getData();
+      })
+    }
+  }
+
+  getData(){
     let that = this; // 'this' doesn't work inside db.ref() functions (maybe need arrow func to bind it)
-    
+    console.log('---------------------------')
+    console.log(this.props.chapterNum)
     const db = firebase.database();
-    let key;
-    
-    db.ref('psalms').orderByChild('chapterNum').equalTo(this.props.chapterNum).once('child_added', function(s){
-      console.log(s.key)
-      key = s.key;
+    // let key;
+    // console.log(this.props.chapterNum)
+    // this.getKey();
+    db.ref('psalms').orderByChild('chapterNum').equalTo(this.props.chapterNum).on('child_added', function(s){
+      // db.ref('psalms').once('value').then(function(s){
+        console.log(s)
+    console.log(s.key)
+      that.state.key = s.key;
+        //  that.getData();
+  
     })
 
-    db.ref('psalms').once('value').then(function(s){
-      console.log(s.val()); // gives everything
-      console.log(s.val()[key]);
+    // db.ref().off('value', getKey);
 
-      const ps = s.val()[key];
+    
+
+    // db.ref('psalms').once('child_added').then(function(snap){
+    //   // console.log(key)
+    //   console.log(snap.val())
+    //   console.log(snap.key) // the psalm number
+    //   console.log(snap.child('chapterNum').exists()) // this is good
+    // });
+  // }
+
+  // getData() {
+    // const db = firebase.database();
+    // let that = this;
+    db.ref('psalms').once('value').then(function(s){
+      // console.log(s.val()); // gives everything
+      // console.log(that)
+      if (that.state.key !== undefined) {
+
+      console.log(s.val()[that.state.key]);
+
+      const ps = s.val()[that.state.key];
 
       if (ps !== undefined) {
         that.setState({
@@ -43,7 +87,7 @@ class PsalmTableData extends Component {
           book: ps.book,
           firstVerse: ps.firstVerse,
           headings: ps.headings,
-          chapterNum: ps.chapterNum,
+          // chapterNum: ps.chapterNum,
           summary: ps.summary,
           topic: ps.topic
         });        
@@ -53,18 +97,13 @@ class PsalmTableData extends Component {
           author: 'Having trouble getting data for you! Please try again later.'
         })
       }
+    }
 
     });
-    // db.ref().once('child_added').then(function(snap){
-      // console.log(key)
-      // console.log(snap.val())
-      // console.log(snap.key) // the psalm number
-      // console.log(snap.child('chapterNum').exists()) // this is good
-    // });
   }
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     return(
       <table>
         {/* <tbody className='content__table'> */}

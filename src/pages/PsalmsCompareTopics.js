@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Footer from '../components/Footer';
-import { Container, Row, Button } from 'reactstrap';
-import PsHeader from '../components/PsHeader';
+// import Footer from '../components/Footer';
+// import { Container, Row, Button } from 'reactstrap';
+// import PsHeader from '../components/PsHeader';
 // import ReactTable from "react-table";
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import PsalmsCompareWrapper from '../components/PsalmsCompareWrapper/PsalmsCompareWrapper';
 // import firebase from '../components/Firebase/firebase';
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Psalms.css';
 import PsHeader from '../components/PsHeader';
 import Footer from '../components/Footer';
@@ -38,7 +38,7 @@ class PsalmsLanding extends Component {
   componentDidUpdate(prevProps) {
     console.log(this.props.location);
     console.log(prevProps)
-    const locationChanged = this.props.location !== prevProps.location;
+    // const locationChanged = this.props.location !== prevProps.location;
   }
 
   // comapre two forms submission button

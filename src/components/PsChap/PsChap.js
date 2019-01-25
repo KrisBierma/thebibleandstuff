@@ -8,6 +8,7 @@ class PsChap extends Component {
     super(props);
     this.state = {
       chapterNum: this.props.chapterNum,
+      passage: `Psalm ${this.props.chapterNum}`,
       wholeChapeter: '',
       freq: [],
       // newFreq2: [],
@@ -25,14 +26,31 @@ class PsChap extends Component {
 
   componentDidMount() {
     // console.log(this.props.match.params);
+    // console.log(this.props.chapterNum)
     this.getPsalm();
+  }
+
+  componentDidUpdate() {
+    // console.log(this.props.chapterNum)// new one
+    // console.log(this.state.chapterNum)// old one
+    // console.log(this.state)
+    if (this.state.chapterNum !== this.props.chapterNum) {
+      this.setState({
+        chapterNum: this.props.chapterNum,
+        passage: `Psalm ${this.props.chapterNum}`
+      }, () => {
+        this.getPsalm();
+      });
+    }
   }
 
   // api to api.esv.org to get the current psalm
   getPsalm() {
     // let apiKey = process.env.REACT_APP_ESV_API_KEY;
     // console.log(process.env.REACT_APP_ESV_API_KEY)
-    const passage = `Psalm ${this.state.chapterNum}`;
+    // let passage = `Psalm ${this.state.chapterNum}`;
+    // console.log(this.state.passage)
+    const passage = this.state.passage;
     const queryURL = 'https://api.esv.org/v3/passage/text/';
     const config = {
       headers: {
@@ -52,6 +70,7 @@ class PsChap extends Component {
 
     // build in resiliency: setTimeout, fallback, error msgs
     const timeout = 5000;
+    // console.log('-----------------------------------')
     axios.get(queryURL, config, timeout)
     .then((res) =>{
       // console.log(res.data);
@@ -334,7 +353,7 @@ class PsChap extends Component {
     // check all the ungrouped words for plurals (just adding -s)
     const difference = -2;
     const toFind = 'es';
-    console.log(difference, -difference)
+    // console.log(difference, -difference)
 
     sortingFunctions(data2, skipped, difference, toFind);
 

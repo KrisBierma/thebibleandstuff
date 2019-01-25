@@ -104,9 +104,9 @@ class PsalmsCompareAuthor extends Component {
   }
 
   render() {
-    // console.log(this.state.authorArray)
+    console.log(this.state.authorArray)
     // console.log(this.state.psalmsChapters);
-    console.log(this.props.location)
+    // console.log(this.props.location)
 
     return(
       <Container>
@@ -119,7 +119,7 @@ class PsalmsCompareAuthor extends Component {
             </Row>
           </div>
           <div className='content content--centered'>
-            <PieChart
+            {/* <PieChart
               labels
               data={this.state.authorArray}
               styles={{
@@ -128,7 +128,7 @@ class PsalmsCompareAuthor extends Component {
                   fill: '#fff'
                 }
               }}
-            />
+            /> */}
           </div>
 
           <div className='content'>

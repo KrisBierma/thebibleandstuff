@@ -12,6 +12,7 @@ import LandingPage from './pages/BibleStuffLanding';
 import About from './pages/About';
 import RandomThoughts from './pages/RandomThoughts';
 import Studies from './pages/Studies';
+import NoMatch from '../src/components/NoMatch';
 
 class App extends Component {
   render() {   
@@ -29,7 +30,9 @@ class App extends Component {
           <Route exact path='/psalmsCompareTopics' component={PsalmsCompareTopic} />
           <Route exact path='/psalm/:chapterNum' component={IndividualPsalm} /> 
           <Route exact path='/psalmsFAQ' component={psalmsFAQ} />
+          <Route path='/*' component={LandingPage} />
           <Route path='*' component={PsalmsLanding} />
+          <Route component={NoMatch} />
         </Switch>      
       </BrowserRouter>
     )
