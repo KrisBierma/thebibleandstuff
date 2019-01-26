@@ -116,10 +116,10 @@ class PsalmTableData extends Component {
             <th>Book</th>
             <td>{this.state.book}</td>
           </tr>
-          <tr>
+          {/* <tr>
             <th>Headings</th>
             <td>{this.state.headings}</td>
-          </tr>
+          </tr> */}
           <tr>
             <th>First Verse</th>
             <td>{this.state.firstVerse}</td>

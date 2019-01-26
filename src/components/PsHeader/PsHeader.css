@@ -9,3 +9,9 @@
   width: 90%;
   margin:auto;
 }
+.header__column{
+  margin: auto;
+}
+.header__column--center{
+  text-align: center;
+}

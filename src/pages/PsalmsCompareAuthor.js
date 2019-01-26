@@ -85,7 +85,6 @@ class PsalmsCompareAuthor extends Component {
       }
       if (!flag) {
         const data = {author:everything[i].author, value:1};
-        // const chap =  
         const data2 = {author:everything[i].author, chapter:everything[i].chapter};
         authorArray.push(data);
         psalmsChapters.push(data2);
@@ -112,14 +111,9 @@ class PsalmsCompareAuthor extends Component {
       <Container>
         <PsHeader heading='Compare Authors'></PsHeader>
         <Row className='content-wrapper'>
-          <div className='content'>
-            <Row className='content__button-row  content__button-row--bordered'>
-              <Button tag={Link} to={'/psalmsCompareAll'}>Compare All Psalms</Button>
-              <Button tag={Link} to={'/psalmsCompareTopics'}>Compare Topics</Button>
-            </Row>
-          </div>
-          <div className='content content--centered'>
-            {/* <PieChart
+
+          <Row className='content content--centered content--fullWidth content__pieChart'>
+            <PieChart
               labels
               data={this.state.authorArray}
               styles={{
@@ -128,18 +122,24 @@ class PsalmsCompareAuthor extends Component {
                   fill: '#fff'
                 }
               }}
-            /> */}
-          </div>
+            />
 
-          <div className='content'>
-            <ReactTable
-              data={this.state.psalmsChapters}
-              columns={this.state.columns}
-              showPagination={false}
-              minRows={0}
-              className='-highlight'
-              />
-          </div>
+            <div className='content'>
+              <ReactTable
+                data={this.state.psalmsChapters}
+                columns={this.state.columns}
+                showPagination={false}
+                minRows={0}
+                className='-highlight'
+                />
+            </div>
+          </Row>
+
+          <Row className='content__button-row content__button-row--fullWidth'>
+            <Button tag={Link} to={'/psalmsCompareAll'}>Compare All Psalms</Button>
+            <Button tag={Link} to={'/psalmsCompareTopics'}>Compare Topics</Button>
+          </Row>
+
         </Row>
         <Footer></Footer>        
       </Container>

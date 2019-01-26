@@ -13,14 +13,7 @@ class IndividualPsalm extends Component {
   constructor(props){
     super(props);
     this.state = {
-      // author: '',
-      // book: '',
-      // firstVerse: '',
-      // headings: '',
       chapterNum: this.props.match.params.chapterNum,
-      // summary: '',
-      // topic: '',
-      // wholeChapeter: '',
       freq:[],
       freq2:[],
       frequentPhrases: [],
@@ -74,12 +67,15 @@ class IndividualPsalm extends Component {
     }
     else {
       return(
-        <div className='content content--columns'>
+        <div className='content content--fullWidth'>
           <h3>{this.state.frequentPhrasesTitle}</h3>
+          <div className='content--columns'>
+
           {this.state.frequentPhrases.map((f) => {
             return(
             <p key={f[0]+f[1]+'-'+f[5]+f[6]+f[10]+''+ f.length}>{f}</p>
             )})}
+            </div>
         </div>      
       )      
     }
@@ -97,8 +93,7 @@ class IndividualPsalm extends Component {
         <Row className='content-wrapper'>
           {/* The actual chapter */}
           <PsChap chapterNum={this.state.chapterNum} getPsWordCount={this.getPsWordCount} groupWordsParent={this.groupWordsParent} frequentPhrases={this.frequentPhrases}
-            className='content--width70 content'
-            />
+          className='content--widthLarger content content--displayLineBreaks' />
 
           {/* Word count */}
           <PsWordCountTable freq={this.state.freq} freq2={this.state.freq2} />
@@ -116,7 +111,7 @@ class IndividualPsalm extends Component {
             <p>The word count only shows words with a frequency of 2 or more.</p>
             <p>Grouping words takes out passive verbs, conjuntions, and articles, and it combines like terms.</p>
           </div>
-          <div className='content__button-row  content__button-row--bordered'>
+          <div className='content__button-row content__button-row--fullWidth'>
             {/* Using the reactStrap Button tag links to the url so it changes and giving it an onClick func forces a refreshed state so component completely rerenders. The component does not unmount */}
             <Button tag={Link} to={`/psalm/${previous}`} onClick={() => this.whichPsalm(previous)}>Previous Psalm</Button>
             <Button tag={Link} to={`/psalm/${next}`} onClick={() => this.whichPsalm(next)}>Next Psalm</Button>

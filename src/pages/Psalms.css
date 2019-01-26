@@ -120,10 +120,13 @@ li a:hover, .bioWords a:hover {
   margin-bottom: 50px;
   padding: 20px;
 }
-.content--width70{
-  width: 70%;
+.content--fullWidth{
+  width: 100%;
 }
-.content--width30{
+.content--widthLarger{
+  width: 60%;
+}
+.content--widthSmaller{
   width: 30%;
 }
 
@@ -138,10 +141,18 @@ li a:hover, .bioWords a:hover {
 }
 .content--columns{
   column-count: 2;
+  width: 100%;
 }
 .content__button-row{
   justify-content: space-around;
   padding-bottom:20px;
+  display: flex;
+}
+.content__button-row--fullWidth{
+  width: 100%;
+}
+.content__button-row--bordered{
+  border-bottom: dotted 7px #ebf1da;
 }
 .content__button-div{
   float: right;
@@ -158,9 +169,7 @@ li a:hover, .bioWords a:hover {
 .content__button-div--psalms{
   /* height: 150px; */
 }
-.content__button-row--bordered{
-  border-bottom: dotted 7px #ebf1da;
-}
+
 .content__button-row__p{
   display: inline-block;
 }
@@ -176,11 +185,24 @@ li a:hover, .bioWords a:hover {
   text-align: -webkit-center;
   max-width: 42%;
 }
+.content__pieChart{
+  /* margin: auto; */
+  display: flex;
+  justify-content: space-evenly;
+}
 .content__table{
-  margin-top:20px; 
+  display: inline-table;
 }
 .table--word{
   width: 100%;
+  margin-bottom: 20px;
+}
+.table--word th{
+  width: 95px;
+  padding-right: 5px;
+}
+.content--displayLineBreaks{
+  white-space: pre-line;
 }
 
 .fern{

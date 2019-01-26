@@ -8,7 +8,7 @@ class PsChap extends Component {
     this.state = {
       chapterNum: this.props.chapterNum,
       passage: `Psalm ${this.props.chapterNum}`,
-      wholeChapeter: '',
+      wholeChapter: '',
       freq: [],
       // newFreq2: [],
       count: '',
@@ -71,14 +71,16 @@ class PsChap extends Component {
     axios.get(queryURL, config, timeout)
     .then((res) =>{
       // console.log(res.data);
-      // console.log(res.data.passages[0]);
-      this.setState({wholeChapeter: res.data.passages[0]});
-      this.getWords(this.state.wholeChapeter);
+      console.log(res.data.passages[0]);
+      const results = res.data.passages[0].replace(/\n{3,}/g, '\n\n');
+      // console.log(results);
+      this.setState({wholeChapter: results});
+      this.getWords(this.state.wholeChapter);
       this.recurringLines();
     })
     .catch(error => {
       console.log(error);
-      this.setState({wholeChapeter: "There was an error getting this chapter from ESV. Please try again later!"})
+      this.setState({wholeChapter: "There was an error getting this chapter from ESV. Please try again later!"})
     });
 
     // just gets first verse
@@ -193,7 +195,7 @@ class PsChap extends Component {
   // find recurring lines of 3+ words
   recurringLines() {
     // change psalm to array
-    const arr = this.state.wholeChapeter.replace(/[.,;!?“”"‘/b’/b]/g, '').split(/\s/).filter(word => word !== '');
+    const arr = this.state.wholeChapter.replace(/[.,;:!?“”‘\b’\b]/g, '').split(/\s/).filter(word => word !== '');
     // console.log(arr)
     let tempArr = [];
     let phrases = [];
@@ -458,9 +460,9 @@ class PsChap extends Component {
 
   render() {
     // console.log(this.props)
-    // console.log(this.state.wholeChapeter)
+    // console.log(this.state.wholeChapter)
     return(
-      <p className={this.props.className}>{this.state.wholeChapeter}</p>
+      <p className={this.props.className}>{this.state.wholeChapter}</p>
     )
   }
 }
