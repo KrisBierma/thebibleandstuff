@@ -32,6 +32,7 @@ class IndividualPsalm extends Component {
     this.groupWordsParent = this.groupWordsParent.bind(this);
     this.frequentPhrases = this.frequentPhrases.bind(this);
     this.whichPsalm = this.whichPsalm.bind(this);
+    this.RenderFrequentPhrases = this.RenderFrequentPhrases.bind(this);
   }
 
   // callback here in parent, sent as props to PsChap child to get freq array to bring back here to state to then send to child pswordcount
@@ -60,21 +61,28 @@ class IndividualPsalm extends Component {
 
   // works with Button link (which changes the url) to reset state with the next psalms info. the component refreshes but does not remount
   whichPsalm(whichOne) {
-    // console.log(this.state.chapterNum)
     this.setState({
-      // author: '',
-      // book: '',
-      // firstVerse: '',
-      // headings: '',
       chapterNum: whichOne,
-      // summary: '',
-      // topic: '',
       wholeChapeter: '',
-      // freq:[],
-      // freq2:[],
-      // frequentPhrases: [],
-      // frequentPhrasesTitle: ''
     });
+  }
+
+  // only rend the area if there are frequent phrases
+  RenderFrequentPhrases(){
+    if (this.state.frequentPhrases.length===0) {
+      return(null)
+    }
+    else {
+      return(
+        <div className='content content--columns'>
+          <h3>{this.state.frequentPhrasesTitle}</h3>
+          {this.state.frequentPhrases.map((f) => {
+            return(
+            <p key={f[0]+f[1]+'-'+f[5]+f[6]+f[10]+''+ f.length}>{f}</p>
+            )})}
+        </div>      
+      )      
+    }
   }
 
   render() {
@@ -96,20 +104,12 @@ class IndividualPsalm extends Component {
           <PsWordCountTable freq={this.state.freq} freq2={this.state.freq2} />
 
           {/* Frequent Phrases */}
-          <div className='content content--columns'>
-            <h3>{this.state.frequentPhrasesTitle}</h3>
-            {this.state.frequentPhrases.map((f) => {
-              return(
-              <p key={f[0]+f[1]+'-'+f[5]+f[6]+f[10]+''+ f.length}>{f}</p>
-              )})}
-          </div>
+          {this.RenderFrequentPhrases()}
 
           {/* Psalm data */}
           <div className='content' style={{marginLeft: '0px'}}>
             <PsalmTableData chapterNum={this.state.chapterNum} />
           </div>              
-
-
 
           {/* Footnotes */}
           <div className='footnote'>

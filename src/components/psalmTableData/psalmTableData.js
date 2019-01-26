@@ -29,12 +29,12 @@ class PsalmTableData extends Component {
   }
   
   componentDidUpdate() {
-    console.log(this.props.chapterNum, this.state.chapterNum)
+    // console.log(this.props.chapterNum, this.state.chapterNum)
     if (this.props.chapterNum !== this.state.chapterNum){
       this.setState({
         chapterNum: this.props.chapterNum
       }, () => {
-        console.log('here')
+        // console.log('here')
         this.getData();
       })
     }
@@ -42,16 +42,16 @@ class PsalmTableData extends Component {
 
   getData(){
     let that = this; // 'this' doesn't work inside db.ref() functions (maybe need arrow func to bind it)
-    console.log('---------------------------')
-    console.log(this.props.chapterNum)
+    // console.log('---------------------------')
+    // console.log(this.props.chapterNum)
     const db = firebase.database();
     // let key;
     // console.log(this.props.chapterNum)
     // this.getKey();
     db.ref('psalms').orderByChild('chapterNum').equalTo(this.props.chapterNum).on('child_added', function(s){
       // db.ref('psalms').once('value').then(function(s){
-        console.log(s)
-    console.log(s.key)
+        // console.log(s)
+    // console.log(s.key)
       that.state.key = s.key;
         //  that.getData();
   
@@ -77,7 +77,7 @@ class PsalmTableData extends Component {
       // console.log(that)
       if (that.state.key !== undefined) {
 
-      console.log(s.val()[that.state.key]);
+      // console.log(s.val()[that.state.key]);
 
       const ps = s.val()[that.state.key];
 
