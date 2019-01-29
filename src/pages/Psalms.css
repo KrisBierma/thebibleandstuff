@@ -1,3 +1,7 @@
+label{
+  display: block;
+}
+
 /* generic classes */
 .container{
   /* margin:0; */
