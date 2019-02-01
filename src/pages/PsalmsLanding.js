@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap';
-import { Link } from 'react-router-dom';
+import {Container, Row, Col, Form, FormGroup, Label, Input} from 'reactstrap';
+// import { Link } from 'react-router-dom';
 import './Psalms.css';
 import PsHeader from '../components/PsHeader';
 import Footer from '../components/Footer';
 import firebase from '../components/Firebase/firebase'; // delete later
+// import { isBoolean } from 'util';
 // import { start } from 'repl';
 // import PsalmsCompareAll from './PsalmsCompareAll';
 // import {history} from '../components/history';
@@ -20,7 +21,6 @@ class PsalmsLanding extends Component {
       author: '',
       book: '',
       firstVerse: '',
-      // headings: '',
       chapterNum: '',
       summary: '',
       // topic: '',
@@ -32,19 +32,24 @@ class PsalmsLanding extends Component {
       praise: false,
       thanksgiving: false,
       triumphVictory: false,
-      instructionProverbs: false,
+      remembrance: false,
+      mercy: false,
       confessionRepentance: false,
+      godlinessRighteousness: false,
+      instructionProverbs: false,
       lawCommands: false,
-      nature: false,
-      endurance: false,
-      aBlessing: false,
-      goodEvil: false,
-      cryForHelp: false,
       ungodliness: false,
       enemies: false,
+      lament: false,
+      cryForHelp: false,
       protectionDeliverance: false,
       comfort: false,
       provision: false,
+      restoration: false,
+      healing: false,
+      dependence: false,
+      nature: false,
+      aBlessing: false,
       natureOfGod: false,
       songOfAscents: false
     }
@@ -52,6 +57,7 @@ class PsalmsLanding extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+    this.resetForm = this.resetForm.bind(this);
     // this.changePage = this.changePage.bind(this);
   }
 
@@ -97,16 +103,13 @@ class PsalmsLanding extends Component {
   handleChange(e) {
     const value = e.target.value;
     const name = e.target.name;
-    // console.log(e.target.value)
     // get name from input box and value from user input
     this.setState({[name]: value});
   }
 
   handleCheckboxChange(e) {
-    // console.log(e.target)
     const value = e.target.type === 'checkbox' ? e.target.checked: e.target.value;
     const name = e.target.name;
-    // console.log(name, value);
     this.setState({[name]: value})
   }
 
@@ -114,110 +117,89 @@ class PsalmsLanding extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const db = firebase.database();
-    console.log(this.state)
-    // see if the chapter is already in the db
+
+    // make sure chapterNum isn't blank
     if (this.state.chapterNum !== '') {
-      let flag = false;
+      // let flag = false;
       let key = '';
       const that = this;
-      db.ref('psalms').orderByChild('chapterNum').equalTo(this.state.chapterNum).on('child_added', function(s){
-        // console.log(s.val())
-        // console.log(s.key)
-        flag=true;
-        // key=s.key;
-        // get the data that's not ''
-        const obj = that.state;
-        let dataToUpdate = {};
-        const stateArr = ['author', 'book', 'firstVerse', 'summary'];
-        // const 
-        Object.entries(obj).map(i => {
-          const key1 = i[0];
-          const value = i[1];
-          if (value !== '' && stateArr.includes(key1)){
-            dataToUpdate[key1] = value;
-          }
-          console.log(value);
-          if (value) dataToUpdate[key1] = value;
-        })
-        console.log(dataToUpdate)
-        check(dataToUpdate);
 
-      });
-      // if it is, update data
-      function check(dataToUpdate) {
-        if (flag) {
-          db.ref('psalms/'+key).update(dataToUpdate)
+      // make data obj to send to db
+      const obj = that.state;
+      let dataToUpdate = {};
+      const stateArr = ['author', 'book', 'chapterNum', 'firstVerse', 'summary'];
+      Object.entries(obj).forEach(i => {
+        let key1 = i[0];
+        const value = i[1];
+        // add to arr of data to push info that's not blank and that pertains to author, book, firstVerse or summary
+        if (value !== '' && stateArr.includes(key1)){
+          dataToUpdate[key1] = value;
         }
-        // if not, push data
+        // add to arr of data to push all the topics, true or false
+        if (typeof value === 'boolean' && value === true) {
+          key1 = 'topic-'+i[0];
+          dataToUpdate[key1] = value;
+        }
+      })
+
+      // if the chapterNum is already in the db...
+      db.ref('psalms').orderByChild('chapterNum').equalTo(this.state.chapterNum).once('value').then(function(s, error){
+        // get the child key
+        s.forEach(function(data) {
+          key=data.key;
+        if (error) console.log('error')
+        })
+        if (s.val()) {
+          console.log('chapter found')
+          // flag=true;
+          db.ref('psalms/'+key).update(dataToUpdate);
+        }
         else {
-          console.log('push data')
-          // db.ref('psalms').push({
-          //   author: this.state.author, 
-          //   book: this.state.book, 
-          //   firstVerse: this.state.firstVerse, 
-          //   chapterNum: this.state.chapterNum, 
-          //   summary: this.state.summary, 
-          //   topic: this.state.topic,
-          //   wordCount: this.state.wordCount,
-          //   praise: this.state.praise,
-          //   thanksgiving: this.state.thanksgiving,
-          //   triumphVictory: this.state.triumphVictory,
-          //   instructionProverbs: this.state.instructionProverbs,
-          //   confessionRepentance: this.state.confessionRepentance,
-          //   lawCommands: this.state.lawCommands,
-          //   nature: this.state.nature,
-          //   endurance: this.state.endurance,
-          //   aBlessing: this.state.aBlessing,
-          //   goodEvil: this.state.goodEvil,
-          //   cryForHelp: this.state.cryForHelp,
-          //   ungodliness: this.state.ungodliness,
-          //   enemies: this.state.enemies,
-          //   protectionDeliverance: this.state.protectionDeliverance,
-          //   comfort: this.state.comfort,
-          //   provision: this.state.provision,
-          //   natureOfGod: this.state.natureOfGod,
-          //   songOfAscents: this.state.songOfAscents
-          // });
-        }  
-      // resetForm();
-
+          console.log('chapter not found, adding new chapter')
+          db.ref('psalms').push(dataToUpdate);
+        }
+      }) 
+      this.resetForm();
       }
-      function resetForm() {
-        this.setState({
-          author: '',
-          book: '',
-          firstVerse: '',
-          // headings: '',
-          chapterNum: '',
-          summary: '',
-          topic: '',
-          wordCount: '',
-          praise: false,
-          thanksgiving: false,
-          triumphVictory: false,
-          instructionProverbs: false,
-          confessionRepentance: false,
-          lawCommands: false,
-          nature: false,
-          endurance: false,
-          aBlessing: false,
-          goodEvil: false,
-          cryForHelp: false,
-          ungodliness: false,
-          enemies: false,
-          protectionDeliverance: false,
-          comfort: false,
-          provision: false,
-          natureOfGod: false,
-          songOfAscents: false
-        }); 
-      }      
-    }
-
-    // reset form
-
   }
-
+  
+  resetForm() {
+    console.log(this.state);
+    // reset checkboxes
+    document.querySelectorAll('input[type=checkbox]').forEach( el => el.checked = false );
+    this.setState({
+      author: '',
+      book: '',
+      firstVerse: '',
+      chapterNum: '',
+      summary: '',
+      topic: '',
+      wordCount: '',
+      praise: false,
+      thanksgiving: false,
+      triumphVictory: false,
+      remembrance: false,
+      mercy: false,
+      confessionRepentance: false,
+      godlinessRighteousness: false,
+      instructionProverbs: false,
+      lawCommands: false,
+      ungodliness: false,
+      enemies: false,
+      lament: false,
+      cryForHelp: false,
+      protectionDeliverance: false,
+      comfort: false,
+      provision: false,
+      restoration: false,
+      healing: false,
+      dependence: false,
+      nature: false,
+      aBlessing: false,
+      natureOfGod: false,
+      songOfAscents: false
+    }); 
+    } 
   // set value from clicked button's id so the render redirect knows where to go
   // changePage(e) {
   //   this.setState({changePage: e.target.value})
@@ -234,7 +216,7 @@ class PsalmsLanding extends Component {
         <PsHeader heading="Psalms" />
         <Row className='content-wrapper'>
           {/* <Col className='mainCol'> */}
-            <div className='content'>
+            {/* <div className='content'>
               <h3><u>Click a Psalm to see the deets.</u></h3>
               <ul>
                 {psalms.map((psalm) => {
@@ -248,16 +230,16 @@ class PsalmsLanding extends Component {
                     </li>     
                   )})}
               </ul>
-            </div>
-            <div>
+            </div> */}
+            {/* <div> */}
               {/* compare all psalms */}
-              <div className='content content--flex'>
-                <Row className='content__button-row content__button-row--bordered'>
+              {/* <div className='content content--flex'> */}
+                {/* <Row className='content__button-row content__button-row--bordered'>
                   <Button tag={Link} to={'/psalmsCompareAll'}>Compare All Psalms</Button>
                   <Button tag={Link} to={'/psalmsCompareAuthors'}>Compare Authors</Button>
                   <Button tag={Link} to={'/psalmsCompareTopics'}>Compare Topics</Button>
-                </Row>
-                <Row>
+                </Row> */}
+                {/* <Row>
                 <Form className='content__form'>
                   <h3><u>Compare two Psalms.</u></h3>
 
@@ -273,24 +255,29 @@ class PsalmsLanding extends Component {
                     </FormGroup>
                     <p id='invalidMsg'>{this.state.invalidMsg}</p>
                     {/* <Button tag={Link} to={`/psalmsCompare/${this.state.psalm1}&${this.state.psalm2}`}>Compare these Two</Button> */}
-                    <button type='submit' 
+                    {/* <button type='submit' 
                     value='compareTwo' className='btn' onClick={this.submitForm}>Compare these two</button>
                   </Form>
-                </Row>
+                </Row> */} 
 
                 {/* <img className='fern' alt='fern' src={require('../assets/images/fern2.png')}></img> */}
-              </div>
-            </div>
+              {/* </div> */}
+            {/* </div> */}
             {/* just for data entry */}
             <div>
               <Form onSubmit={this.handleSubmit}>
+              <Row>
+              <Col>
                 <Input type='string' name='author' value={this.state.author} onChange = {this.handleChange} placeholder='Author' />
                 <Input type='string' name='book' value={this.state.book} onChange = {this.handleChange} placeholder='Book' />
                 <Input type='string' name='firstVerse' value={this.state.firstVerse} onChange= {this.handleChange} placeholder='first verse' />
                 {/* <Input type='string' name='headings' value={this.state.headings} onChange= {this.handleChange} placeholder='headings' /> */}
                 <Input type='number' name='chapterNum' value={this.state.chapterNum} onChange= {this.handleChange} placeholder='chapter' />
                 <Input type='string' name='summary' value={this.state.summary} onChange= {this.handleChange} placeholder='summary' />
-
+                <Input type='number' name='wordCount' value={this.state.wordCount} onChange= {this.handleChange} placeholder='word count' />
+                <button type='submit' value='Submit'>Submit Data</button>
+</Col>
+<Col>
                 <FormGroup check>
                   <Label check>
                     <Input type='checkbox' name='praise' value='praise' onChange={this.handleCheckboxChange}/>Praise
@@ -302,34 +289,35 @@ class PsalmsLanding extends Component {
                     <Input type='checkbox' name='triumphVictory' value='triumph-victory' onChange={this.handleCheckboxChange}/>triumph-victory
                   </Label>
                   <Label check>
+                    <Input type='checkbox' name='remembrance' value='remembrance' onChange={this.handleCheckboxChange}/>remembrance
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='mercy' value='mercy' onChange={this.handleCheckboxChange}/>mercy
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='confessionRepentance' value='confession-repentance' onChange={this.handleCheckboxChange}/>confession-repentance-forgiveness           
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='godlinessRighteousness' value='godlinessRighteousness' onChange={this.handleCheckboxChange}/>godlinessRighteousness
+                  </Label>
+                  <Label check>
                     <Input type='checkbox' name='instructionProverbs' value='instruction-proverbs' onChange={this.handleCheckboxChange}/>instruction-proverbs                
                   </Label>
                   <Label check>
-                    <Input type='checkbox' name='confessionRepentance' value='confession-repentance' onChange={this.handleCheckboxChange}/>confession-repentance                
-                  </Label>
-                  <Label check>
                     <Input type='checkbox' name='lawCommands' value='law-commands' onChange={this.handleCheckboxChange}/>law-commands
-                  </Label>
-                  <Label check>
-                    <Input type='checkbox' name='nature' value='nature' onChange={this.handleCheckboxChange}/>nature
-                  </Label>
-                  <Label check>
-                    <Input type='checkbox' name='endurance' value='endurance' onChange={this.handleCheckboxChange}/>endurance
-                  </Label>
-                  <Label check>
-                    <Input type='checkbox' name='aBlessing' value='aBlessing' onChange={this.handleCheckboxChange}/>aBlessing
-                  </Label>
-                  <Label check>
-                    <Input type='checkbox' name='goodEvil' value='good-evil' onChange={this.handleCheckboxChange}/>good-evil
-                  </Label>
-                  <Label check>
-                    <Input type='checkbox' name='cryForHelp' value='cryForHelp' onChange={this.handleCheckboxChange}/>cryForHelp
                   </Label>
                   <Label check>
                     <Input type='checkbox' name='ungodliness' value='ungodliness' onChange={this.handleCheckboxChange}/>ungodliness
                   </Label>
                   <Label check>
                     <Input type='checkbox' name='enemies' value='enemies' onChange={this.handleCheckboxChange}/>enemies
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='lament' value='lament' onChange={this.handleCheckboxChange}/>lament
+                  </Label>
+              
+                  <Label check>
+                    <Input type='checkbox' name='cryForHelp' value='cryForHelp' onChange={this.handleCheckboxChange}/>cryForHelp
                   </Label>
                   <Label check>
                     <Input type='checkbox' name='protectionDeliverance' value='protection-deliverance' onChange={this.handleCheckboxChange}/>protection-deliverance                
@@ -341,6 +329,21 @@ class PsalmsLanding extends Component {
                   <Input type='checkbox' name='provision' value='provision' onChange={this.handleCheckboxChange}/>provision   
                   </Label>
                   <Label check>
+                    <Input type='checkbox' name='restoration' value='restoration' onChange={this.handleCheckboxChange}/>restoration
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='healing' value='healing' onChange={this.handleCheckboxChange}/>healing
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='dependence' value='dependence' onChange={this.handleCheckboxChange}/>dependence
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='nature' value='nature' onChange={this.handleCheckboxChange}/>nature
+                  </Label>
+                  <Label check>
+                    <Input type='checkbox' name='aBlessing' value='aBlessing' onChange={this.handleCheckboxChange}/>aBlessing
+                  </Label>
+                  <Label check>
                     <Input type='checkbox' name='natureOfGod' value='natureOfGod' onChange={this.handleCheckboxChange}/>natureOfGod
                   </Label>
                   <Label check>
@@ -348,10 +351,9 @@ class PsalmsLanding extends Component {
                   </Label>
                 </FormGroup>
 
+</Col>
+</Row>
 
-                <Input type='number' name='wordCount' value={this.state.wordCount} onChange= {this.handleChange} placeholder='word count' />
-
-                <button type='submit' value='Submit'>Submit Data</button>
               </Form>
             </div>
           {/* </Col> */}

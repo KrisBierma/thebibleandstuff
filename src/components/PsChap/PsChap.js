@@ -71,7 +71,7 @@ class PsChap extends Component {
     axios.get(queryURL, config, timeout)
     .then((res) =>{
       // console.log(res.data);
-      console.log(res.data.passages[0]);
+      // console.log(res.data.passages[0]);
       const results = res.data.passages[0].replace(/\n{3,}/g, '\n\n');
       // console.log(results);
       this.setState({wholeChapter: results});
@@ -102,6 +102,7 @@ class PsChap extends Component {
     };
     axios.get(queryURL, config2).then((res) =>{
       // console.log(res.data);
+      console.log('Psalm '+this.state.chapterNum);
       console.log(res.data.passages[0]);
     });
   }
@@ -242,7 +243,7 @@ class PsChap extends Component {
           }
       }
     }
-    console.log(phrases); 
+    // console.log(phrases); 
     // call the func in the parent 'individualPsalm' component to pass the data to it so it can get displayed
     this.props.frequentPhrases(phrases);
   }
@@ -391,7 +392,7 @@ class PsChap extends Component {
             const start = greater.length-difference;
             // console.log(start);
             // console.log(greater.slice(start, greater.length), toFind);
-            if (greater.slice(start, greater.length) == toFind) {
+            if (greater.slice(start, greater.length) === toFind) {
             // if (greater[last] === toFind) {
               let greaterObj, lesserObj, greaterIndex, lesserIndex;
               function findThem2() {

@@ -7,6 +7,7 @@ import PsHeader from '../components/PsHeader';
 import Footer from '../components/Footer';
 
 // fix link className
+// add contact me form
 
 class PsalmsFaq extends Component {
 
@@ -25,8 +26,8 @@ class PsalmsFaq extends Component {
               <p>I like the English Standard Version (ESV) becuase it takes out any verse or other reference from the chapter and instead reads like a normal book of poetry. <Link className='psalmLink' to='https://www.esv.org/'>This</Link> is the website I used.</p>
             </Row>
             <Row>
-              <h2>Another Question</h2>
-              <p>Another answer.</p>
+              <h2>I have another question/ comment/ idea.</h2>
+              <p>Awesome! Contact me here, especially if you found something missing/ a mistake in the topics page.</p>
             </Row>
           </Col>
         </Row>
