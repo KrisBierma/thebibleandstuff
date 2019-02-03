@@ -14,7 +14,8 @@ class PsalmsCompareAuthor extends Component {
       everything: [],
       authorArray: [],
       psalmsChapters: [],
-      columns: []
+      columns: [],
+      rowWidth: ''
     }
     this.getInfo=this.getInfo.bind(this);
     this.sortInfo=this.sortInfo.bind(this);
@@ -24,6 +25,9 @@ class PsalmsCompareAuthor extends Component {
   componentDidMount() {
     this.getInfo();
     this.makeTableHeaders();
+    var w =document.getElementById('tableRow').offsetWidth;
+console.log(w)
+    this.setState({rowWidth: w})
   }
 
   // get data from firebase db
@@ -67,25 +71,25 @@ class PsalmsCompareAuthor extends Component {
     const everything = this.state.everything;
     let authorArray=[{key:everything[0].author, value:1}];
     let psalmsChapters=[{author:everything[0].author, chapter:[everything[0].chapter]}];
-
     // loop through and compare the massive list of authors to a new array of obj, adding up the times an author wrote a psalm 
     for (let i=1; i<everything.length; i++) {
-      // if false new data isn't pushed into authorArray
-      let flag=false;
-
+      // if false new data is pushed into authorArray
+      let flag=true;
       // loop through author Array once for each value of massive data array
       for (let j=0; j<authorArray.length; j++) {
-        flag=false;
+        flag=true;
+        // if the author from everything array equals the author in the authorArr, update the value and add the chapterNum 
         if (authorArray[j].key === everything[i].author) {
           authorArray[j].value++;
           psalmsChapters[j].chapter.push(', ' + everything[i].chapter);
-          flag = true;
+          flag = false;
           break;
         }
       }
-      if (!flag) {
-        const data = {author:everything[i].author, value:1};
-        const data2 = {author:everything[i].author, chapter:everything[i].chapter};
+      // if flag is true, the author wasn't already in the authorArr, so push it
+      if (flag) {
+        const data = {key:everything[i].author, value:1};
+        const data2 = {author:everything[i].author, chapter:[everything[i].chapter]};
         authorArray.push(data);
         psalmsChapters.push(data2);
       }
@@ -96,16 +100,16 @@ class PsalmsCompareAuthor extends Component {
   makeTableHeaders() {
     this.setState({
       columns:[
-        {Header: 'Author', accessor: 'author'},
-        {Header: 'Chapters', id: 'chapters', accessor: d => d.chapter}
+        {Header: 'Author', accessor: 'author', minWidth: 150},
+        {Header: 'Chapters', id: 'chapters', accessor: d => d.chapter, minWidth: 400, width: this.state.rowWidth, style: {'whiteSpace': 'unset'}}
       ]
     })
   }
 
   render() {
-    console.log(this.state.authorArray)
+    // console.log(this.state.authorArray)
     // console.log(this.state.psalmsChapters);
-    // console.log(this.props.location)
+    console.log(this.state.rowWidth)
 
     return(
       <Container>
@@ -123,16 +127,18 @@ class PsalmsCompareAuthor extends Component {
                 }
               }}
             />
-
-            <div className='content'>
+          </Row>
+          <Row id='tableRow' className='content content--fullWidth'>
+            {/* <div > */}
               <ReactTable
                 data={this.state.psalmsChapters}
                 columns={this.state.columns}
                 showPagination={false}
                 minRows={0}
-                className='-highlight'
+                className='-highlight table--centered'
+                // sorted={[{id: 'Author', desc: true}]}
                 />
-            </div>
+            {/* </div> */}
           </Row>
 
           <Row className='content__button-row content__button-row--fullWidth'>

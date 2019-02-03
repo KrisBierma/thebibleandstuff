@@ -1,9 +1,6 @@
 label{
   display: block;
 }
-.trial{
-  
-}
 /* generic classes */
 .container{
   /* margin:0; */
@@ -206,6 +203,9 @@ li a:hover, .bioWords a:hover {
 .table--word th{
   width: 95px;
   padding-right: 5px;
+}
+.table--centered{
+  margin: auto;
 }
 .content--displayLineBreaks{
   white-space: pre-line;
