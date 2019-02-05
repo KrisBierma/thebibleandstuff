@@ -1,20 +1,12 @@
 import React, {Component} from 'react';
-import {Container, Row, Col, Form, FormGroup, Label, Input} from 'reactstrap';
-// import { Link } from 'react-router-dom';
+import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap';
 import './Psalms.css';
 import PsHeader from '../components/PsHeader';
 import Footer from '../components/Footer';
-import firebase from '../components/Firebase/firebase'; // delete later
-// import { isBoolean } from 'util';
-// import { start } from 'repl';
-// import PsalmsCompareAll from './PsalmsCompareAll';
-// import {history} from '../components/history';
-// import { createBrowserHistory } from 'history';
-// import { browserHistory } from 'react-router';
-
+import { Link } from 'react-router-dom';
+import firebase from '../components/Firebase/firebase';
 
 class PsalmsLanding extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +15,6 @@ class PsalmsLanding extends Component {
       firstVerse: '',
       chapterNum: '',
       summary: '',
-      // topic: '',
       wordCount: '',
       psalm1: '',
       psalm2: '',
@@ -51,20 +42,16 @@ class PsalmsLanding extends Component {
       nature: false,
       aBlessing: false,
       natureOfGod: false,
-      songOfAscents: false
+      songOfAscents: false,
     }
     this.submitForm = this.submitForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.resetForm = this.resetForm.bind(this);
-    // this.changePage = this.changePage.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    // console.log(this.props.location);
-    // console.log(prevProps)
-    // const locationChanged = this.props.location !== prevProps.location;
+  componentDidUpdate() {
   }
 
   // comapre two forms submission button
@@ -88,14 +75,9 @@ class PsalmsLanding extends Component {
     }
     // pass the requested psalms as props and switch to comparision page
     else {
-      // this.setState({changePage: e.target.value});
       const location = `/psalmsCompare/${this.state.psalm1}&${this.state.psalm2}`;
       console.log(location);
-      // const history = createBrowserHistory();
-      // history.push(location);
-      // console.log(history)
       this.props.history.push(location);
-
     }
   }
 
@@ -127,7 +109,7 @@ class PsalmsLanding extends Component {
       // make data obj to send to db
       const obj = that.state;
       let dataToUpdate = {};
-      const stateArr = ['author', 'book', 'chapterNum', 'firstVerse', 'summary'];
+      const stateArr = ['author', 'book', 'chapterNum', 'firstVerse', 'summary', 'wordCount'];
       Object.entries(obj).forEach(i => {
         let key1 = i[0];
         const value = i[1];
@@ -151,7 +133,7 @@ class PsalmsLanding extends Component {
         })
         if (s.val()) {
           console.log('chapter found')
-          // flag=true;
+          console.log(dataToUpdate)
           db.ref('psalms/'+key).update(dataToUpdate);
         }
         else {
@@ -200,10 +182,6 @@ class PsalmsLanding extends Component {
       songOfAscents: false
     }); 
     } 
-  // set value from clicked button's id so the render redirect knows where to go
-  // changePage(e) {
-  //   this.setState({changePage: e.target.value})
-  // }
 
   render() {
     const psalms = [];
@@ -215,8 +193,8 @@ class PsalmsLanding extends Component {
       <Container>
         <PsHeader heading="Psalms" />
         <Row className='content-wrapper'>
-          {/* <Col className='mainCol'> */}
-            {/* <div className='content'>
+          <Col className='mainCol'>
+            <div className='content'>
               <h3><u>Click a Psalm to see the deets.</u></h3>
               <ul>
                 {psalms.map((psalm) => {
@@ -230,16 +208,16 @@ class PsalmsLanding extends Component {
                     </li>     
                   )})}
               </ul>
-            </div> */}
-            {/* <div> */}
+            </div>
+            <div>
               {/* compare all psalms */}
-              {/* <div className='content content--flex'> */}
-                {/* <Row className='content__button-row content__button-row--bordered'>
+              <div className='content content--flex'>
+                <Row className='content__button-row content__button-row--bordered'>
                   <Button tag={Link} to={'/psalmsCompareAll'}>Compare All Psalms</Button>
                   <Button tag={Link} to={'/psalmsCompareAuthors'}>Compare Authors</Button>
                   <Button tag={Link} to={'/psalmsCompareTopics'}>Compare Topics</Button>
-                </Row> */}
-                {/* <Row>
+                </Row>
+                <Row>
                 <Form className='content__form'>
                   <h3><u>Compare two Psalms.</u></h3>
 
@@ -254,27 +232,27 @@ class PsalmsLanding extends Component {
                       </Col>
                     </FormGroup>
                     <p id='invalidMsg'>{this.state.invalidMsg}</p>
-                    {/* <Button tag={Link} to={`/psalmsCompare/${this.state.psalm1}&${this.state.psalm2}`}>Compare these Two</Button> */}
+                    <Button tag={Link} to={`/psalmsCompare/${this.state.psalm1}&${this.state.psalm2}`}>Compare these Two</Button>
                     {/* <button type='submit' 
-                    value='compareTwo' className='btn' onClick={this.submitForm}>Compare these two</button>
+                    value='compareTwo' className='btn' onClick={this.submitForm}>Compare these two</button> */}
                   </Form>
-                </Row> */} 
+                </Row> 
 
                 {/* <img className='fern' alt='fern' src={require('../assets/images/fern2.png')}></img> */}
-              {/* </div> */}
-            {/* </div> */}
+              </div>
+            </div>
+
             {/* just for data entry */}
-            <div>
+            {/* <div>
               <Form onSubmit={this.handleSubmit}>
               <Row>
               <Col>
+                <Input type='number' name='chapterNum' value={this.state.chapterNum} onChange= {this.handleChange} placeholder='chapter' />
                 <Input type='string' name='author' value={this.state.author} onChange = {this.handleChange} placeholder='Author' />
                 <Input type='string' name='book' value={this.state.book} onChange = {this.handleChange} placeholder='Book' />
+                <Input type='number' name='wordCount' value={this.state.wordCount} onChange= {this.handleChange} placeholder='word count' />                
                 <Input type='string' name='firstVerse' value={this.state.firstVerse} onChange= {this.handleChange} placeholder='first verse' />
-                {/* <Input type='string' name='headings' value={this.state.headings} onChange= {this.handleChange} placeholder='headings' /> */}
-                <Input type='number' name='chapterNum' value={this.state.chapterNum} onChange= {this.handleChange} placeholder='chapter' />
                 <Input type='string' name='summary' value={this.state.summary} onChange= {this.handleChange} placeholder='summary' />
-                <Input type='number' name='wordCount' value={this.state.wordCount} onChange= {this.handleChange} placeholder='word count' />
                 <button type='submit' value='Submit'>Submit Data</button>
 </Col>
 <Col>
@@ -355,8 +333,11 @@ class PsalmsLanding extends Component {
 </Row>
 
               </Form>
-            </div>
-          {/* </Col> */}
+            </div> 
+             */}
+            {/* end data entry */}
+            
+          </Col>
         </Row>
         <Footer></Footer>
       </Container>

@@ -45,6 +45,7 @@ class IndividualPsalm extends Component {
   }
 
   frequentPhrases(params) {
+    console.log('here')
     var title = (params.length > 0) ? <u>Frequent Phrases:</u> : '';
     this.setState({
       frequentPhrases: params,
@@ -92,8 +93,12 @@ class IndividualPsalm extends Component {
         
         <Row className='content-wrapper'>
           {/* The actual chapter */}
-          <PsChap chapterNum={this.state.chapterNum} getPsWordCount={this.getPsWordCount} groupWordsParent={this.groupWordsParent} frequentPhrases={this.frequentPhrases}
-          className='content--widthLarger content content--displayLineBreaks' />
+          <PsChap 
+            chapterNum={this.state.chapterNum} 
+            getPsWordCount={this.getPsWordCount} 
+            groupWordsParent={this.groupWordsParent} 
+            frequentPhrases={this.frequentPhrases}
+            className='content--widthLarger content content--displayLineBreaks' />
 
           {/* Word count */}
           <PsWordCountTable freq={this.state.freq} freq2={this.state.freq2} />

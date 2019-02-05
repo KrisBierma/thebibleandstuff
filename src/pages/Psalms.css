@@ -150,12 +150,15 @@ li a:hover, .bioWords a:hover {
   justify-content: space-around;
   padding-bottom:20px;
   display: flex;
-}
-.content__button-row--fullWidth{
   width: 100%;
 }
+/* .content__button-row--fullWidth{
+  width: 100%;
+} */
 .content__button-row--bordered{
   border-bottom: dotted 7px #ebf1da;
+  background-color: white;
+  padding: 20px;
 }
 .content__button-div{
   float: right;
@@ -172,9 +175,12 @@ li a:hover, .bioWords a:hover {
 .content__button-div--psalms{
   /* height: 150px; */
 }
-
 .content__button-row__p{
-  display: inline-block;
+  /* display: inline-block; */
+  /* margin: 0; */
+  /* color:blue; */
+  line-height: 38px;
+  font-size: 18px;
 }
 .content__form{
   padding: 20px;
@@ -195,6 +201,11 @@ li a:hover, .bioWords a:hover {
 }
 .content__table{
   display: inline-table;
+}
+.content__table--compareAll, .content__table--compareTopics{
+  /* margin-top: 30px; */
+  width: 100%;
+  display: block;
 }
 .table--word{
   width: 100%;
@@ -242,4 +253,7 @@ li a:hover, .bioWords a:hover {
 }
 .footnote p{
   font-size: 0.9em;
+}
+.footnote a{
+  color: black;
 }

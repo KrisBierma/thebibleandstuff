@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import Footer from '../components/Footer';
+import { Container, Row, Button } from 'reactstrap';
+import PsHeader from '../components/PsHeader';
 import firebase from '../components/Firebase/firebase';
 import { PieChart } from 'react-easy-chart';
 import ReactTable from "react-table";
-import PsalmsCompareWrapper from '../components/PsalmsCompareWrapper/PsalmsCompareWrapper';
+import { Link } from 'react-router-dom'
+
 
 class PsalmsCompareAuthor extends Component {
   constructor(props) {
@@ -22,7 +26,7 @@ class PsalmsCompareAuthor extends Component {
   componentDidMount() {
     this.getInfo();
     var w =document.getElementById('tableRow').clientWidth;
-    // console.log(w)
+    console.log(w)
     w-=40; // minus padding
     // set row width for table before making them
     this.setState({rowWidth: w}, () => {
@@ -36,15 +40,23 @@ class PsalmsCompareAuthor extends Component {
     const db = firebase.database();
 
     db.ref('psalms').on('value', function(s){
+      // console.log(s.val()); // gives everything
+      // that.setState({everything: s.val()});
+
       // console.log(that.state.everything)
       s.forEach(function(childsnap){
+        // console.log(childsnap.key)
+        // console.log(childsnap.val())
         const c = childsnap.val();
 
         // save data from db one chapter at a time
         let data = {
           chapter: c.chapterNum,
+          // book: c.book,
           author: c.author,
+          // firstV: c.firstVerse,
           topics: c.topic,
+          // headings: c.headings
         };
 
         // push the data into the array of all chapters
@@ -90,6 +102,7 @@ class PsalmsCompareAuthor extends Component {
   }
 
   makeTableHeaders() {
+    console.log(this.state.rowWidth)
     this.setState({
       columns:[
         {Header: 'Author', accessor: 'author', id: 'Author', minWidth: 150},
@@ -99,43 +112,49 @@ class PsalmsCompareAuthor extends Component {
   }
 
   render() {
-    // console.log(this.state.columns)
-    console.log(this.state.psalmsChapters);
-    // console.log(this.state.rowWidth)
+    // console.log(this.state.authorArray)
+    // console.log(this.state.psalmsChapters);
+    console.log(this.state.rowWidth)
 
     return(
-      <PsalmsCompareWrapper
-        heading='Compare Authors'
-        // className='content__button-row--fullWidth'
-        compare1Link='/psalmsCompareAll'
-        compare1Title='Compare All Psalms'
-        compare2Link='/psalmsCompareTopics'
-        compare2Title='Compare Topics'     
-        className2='content--fullWidth content__pieChart'   
-      >
-        <div className='content--centered'>
-          <PieChart
-            labels
-            data={this.state.authorArray}
-            styles={{
-              '.chart_text': {
-                fontSize: '1em',
-                fill: '#fff'
-              }
-            }}
-          />
-        </div>
-        <div id='tableRow' className='content content--fullWidth'>
-          <ReactTable
-            data={this.state.psalmsChapters}
-            columns={this.state.columns}
-            showPagination={false}
-            minRows={0}
-            className='-highlight table--centered'
-            // sorted={[{id: 'Author', desc: true}]}
+      <Container>
+        <PsHeader heading='Compare Authors'></PsHeader>
+        <Row className='content-wrapper'>
+
+          <Row className='content content--centered content--fullWidth content__pieChart'>
+            <PieChart
+              labels
+              data={this.state.authorArray}
+              styles={{
+                '.chart_text': {
+                  fontSize: '1em',
+                  fill: '#fff'
+                }
+              }}
             />
-        </div>      
-      </PsalmsCompareWrapper>
+          </Row>
+          <Row id='tableRow' className='content content--fullWidth'>
+            {/* <div > */}
+              <ReactTable
+                data={this.state.psalmsChapters}
+                columns={this.state.columns}
+                showPagination={false}
+                minRows={0}
+                className='-highlight table--centered'
+                // sorted={[{id: 'Author', desc: true}]}
+                />
+            {/* </div> */}
+          </Row>
+
+          <Row className='content__button-row content__button-row--fullWidth'>
+            <Button tag={Link} to={'/psalmsCompareAll'}>Compare All Psalms</Button>
+            <Button tag={Link} to={'/psalmsCompareTopics'}>Compare Topics</Button>
+          </Row>
+
+        </Row>
+        <Footer></Footer>        
+      </Container>
+
     )
   }
 }

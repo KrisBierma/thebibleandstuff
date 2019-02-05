@@ -1,8 +1,6 @@
 // compares two psalms
 import React, { Component } from 'react';
 import { Row, Col, Container } from 'reactstrap';
-// import axios from 'axios';
-// import firebase from '../components/Firebase/firebase';
 import PsHeader from '../components/PsHeader';
 import Footer from '../components/Footer';
 import PsChap from '../components/PsChap';
@@ -35,6 +33,7 @@ class PsalmsComparison extends Component {
   }
 
   render() {
+    console.log(this.state.psalm1)
     return(
     <Container>
       <PsHeader heading={`Psalms ${this.state.psalm1} and ${this.state.psalm2}`} />
@@ -44,11 +43,17 @@ class PsalmsComparison extends Component {
           <Row>
             <Col>
               <p>Psalm {this.state.psalm1}</p>
-              <PsChap chapterNum={this.state.psalm1} getPsWordCount={this.getPsWordCount} groupWordsParent={this.groupWordsParent} />
+              <PsChap 
+                chapterNum={this.state.psalm1} 
+                getPsWordCount={this.getPsWordCount} 
+                groupWordsParent={this.groupWordsParent} />
             </Col>
             <Col>
-              <p>Psalm {this.state.psalm1}</p>
-              <PsChap chapterNum={this.state.psalm2} getPsWordCount={this.getPsWordCount} groupWordsParent={this.groupWordsParent} />
+              <p>Psalm {this.state.psalm2}</p>
+              <PsChap 
+                chapterNum={this.state.psalm2} 
+                getPsWordCount={this.getPsWordCount} 
+                groupWordsParent={this.groupWordsParent} />
             </Col>
           </Row>
           <Row>

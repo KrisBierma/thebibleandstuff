@@ -194,7 +194,7 @@ class PsChap extends Component {
   }
 
   // find recurring lines of 3+ words
-  recurringLines() {
+  recurringLines(props) {
     // change psalm to array
     const arr = this.state.wholeChapter.replace(/[.,;:!?“”‘\b’\b]/g, '').split(/\s/).filter(word => word !== '');
     // console.log(arr)
@@ -461,7 +461,7 @@ class PsChap extends Component {
 
   render() {
     // console.log(this.props)
-    // console.log(this.state.wholeChapter)
+    console.log(this.state.wholeChapter)
     return(
       <p className={this.props.className}>{this.state.wholeChapter}</p>
     )
