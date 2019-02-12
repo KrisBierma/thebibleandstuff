@@ -222,6 +222,17 @@ li a:hover, .bioWords a:hover {
   white-space: pre-line;
 }
 
+/* .container__tooltip{
+
+}
+.tooltip{
+  border: 'solid silver 1px';
+  position: 'fixed';
+  background-color: 'white';
+  border-radius: '4px';
+  padding: '10px'; 
+} */
+
 .fern{
   height: 700px; 
   transform: rotate(34deg);

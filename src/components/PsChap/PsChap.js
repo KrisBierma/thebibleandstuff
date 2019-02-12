@@ -461,7 +461,7 @@ class PsChap extends Component {
 
   render() {
     // console.log(this.props)
-    console.log(this.state.wholeChapter)
+    // console.log(this.state.wholeChapter)
     return(
       <p className={this.props.className}>{this.state.wholeChapter}</p>
     )

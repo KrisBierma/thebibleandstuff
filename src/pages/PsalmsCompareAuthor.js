@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import firebase from '../components/Firebase/firebase';
-import { PieChart } from 'react-easy-chart';
+import { PieChart, Legend } from 'react-easy-chart';
+// import { Tooltip } from 'reactstrap';
 import ReactTable from "react-table";
 import PsalmsCompareWrapper from '../components/PsalmsCompareWrapper/PsalmsCompareWrapper';
+// import ToolTip from '../components/ToolTip.js';
 
 class PsalmsCompareAuthor extends Component {
   constructor(props) {
@@ -12,11 +14,16 @@ class PsalmsCompareAuthor extends Component {
       authorArray: [],
       psalmsChapters: [],
       columns: [],
-      rowWidth: ''
+      rowWidth: '',
+      // showToolTip: false
     }
     this.getInfo=this.getInfo.bind(this);
     this.sortInfo=this.sortInfo.bind(this);
     this.makeTableHeaders=this.makeTableHeaders.bind(this);
+    // this.mouseOverHandler=this.mouseOverHandler.bind(this);
+    // this.mouseMoveHandler=this.mouseMoveHandler.bind(this);
+    // this.mouseOutHandler=this.mouseOutHandler.bind(this);
+    // this.createTooltip=this.createTooltip.bind(this);
   }
 
   componentDidMount() {
@@ -86,6 +93,7 @@ class PsalmsCompareAuthor extends Component {
         psalmsChapters.push(data2);
       }
     }
+    console.log(authorArray)
     this.setState({authorArray:authorArray, psalmsChapters: psalmsChapters})
   }
 
@@ -98,9 +106,50 @@ class PsalmsCompareAuthor extends Component {
     })
   }
 
+  // for pie chart
+  // mouseOverHandler(d, e) {
+  //   console.log(d, e)
+  //   this.setState({
+  //     showToolTip: true,
+  //     top: `${e.y - 10}px`,
+  //     left: `${e.x + 10}px`,
+  //     value: d.value,
+  //     key: d.data.key});
+  // }
+  // mouseMoveHandler(e) {
+  //   // console.log(this.state.showToolTip)
+  //   if (this.state.showToolTip) {
+  //     this.setState({ top: `${e.y}px`, left: `${e.x + 10}px` });
+  //   }
+  // }
+  // mouseOutHandler() {
+  //   this.setState({showToolTip: false});
+  // }
+  // createTooltip() {
+  //   if (this.state.showToolTip) {
+  //     return (
+  //       // <ToolTip
+  //       //   top={this.state.top}
+  //       //   left={this.state.left}
+  //       // >
+  //       //   The value of {this.state.key} is {this.state.value}
+  //       // </ToolTip>
+  //       <Tooltip
+  //         placement='right'
+  //         isOpen={this.state.showToolTip}
+  //         target='chart'
+
+  //       >
+  //         The value of {this.state.key} is {this.state.value}
+  //       </Tooltip>
+  //     );
+  //   }
+  //   return false;
+  // }  
+
   render() {
     // console.log(this.state.columns)
-    console.log(this.state.psalmsChapters);
+    // console.log(this.state.psalmsChapters);
     // console.log(this.state.rowWidth)
 
     return(
@@ -115,7 +164,7 @@ class PsalmsCompareAuthor extends Component {
       >
         <div className='content--centered'>
           <PieChart
-            labels
+            // labels
             data={this.state.authorArray}
             styles={{
               '.chart_text': {
@@ -124,6 +173,8 @@ class PsalmsCompareAuthor extends Component {
               }
             }}
           />
+          <Legend data={this.state.authorArray} dataId={'value'} horizontal />
+
         </div>
         <div id='tableRow' className='content content--fullWidth'>
           <ReactTable

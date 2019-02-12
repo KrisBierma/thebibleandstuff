@@ -243,7 +243,7 @@ class PsalmsLanding extends Component {
             </div>
 
             {/* just for data entry */}
-            {/* <div>
+            <div>
               <Form onSubmit={this.handleSubmit}>
               <Row>
               <Col>
@@ -334,7 +334,7 @@ class PsalmsLanding extends Component {
 
               </Form>
             </div> 
-             */}
+            
             {/* end data entry */}
             
           </Col>
