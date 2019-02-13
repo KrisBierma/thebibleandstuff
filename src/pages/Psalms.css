@@ -138,7 +138,10 @@ li a:hover, .bioWords a:hover {
   text-align: center;
   text-align: -webkit-center; 
 }
-
+.content--left{
+  text-align: left;
+  margin: auto;
+}
 .content--flex{
   flex-direction: column;
 }
@@ -245,6 +248,13 @@ li a:hover, .bioWords a:hover {
 }
 .img--logo--small{
   height: 50px
+}
+.legendCircle{
+  height: 15px;
+  width: 15px;
+  border-radius: 50px;
+  display: inline-block;
+  margin-right: 5px;
 }
 
 /* light #c2d03b */

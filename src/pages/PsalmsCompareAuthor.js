@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import firebase from '../components/Firebase/firebase';
-import { PieChart, Legend } from 'react-easy-chart';
-// import { Tooltip } from 'reactstrap';
+import { PieChart } from 'react-easy-chart';
 import ReactTable from "react-table";
 import PsalmsCompareWrapper from '../components/PsalmsCompareWrapper/PsalmsCompareWrapper';
-// import ToolTip from '../components/ToolTip.js';
+import LegendCircle from '../components/LegendCircle';
 
 class PsalmsCompareAuthor extends Component {
   constructor(props) {
@@ -14,16 +13,11 @@ class PsalmsCompareAuthor extends Component {
       authorArray: [],
       psalmsChapters: [],
       columns: [],
-      rowWidth: '',
-      // showToolTip: false
+      rowWidth: ''
     }
     this.getInfo=this.getInfo.bind(this);
     this.sortInfo=this.sortInfo.bind(this);
     this.makeTableHeaders=this.makeTableHeaders.bind(this);
-    // this.mouseOverHandler=this.mouseOverHandler.bind(this);
-    // this.mouseMoveHandler=this.mouseMoveHandler.bind(this);
-    // this.mouseOutHandler=this.mouseOutHandler.bind(this);
-    // this.createTooltip=this.createTooltip.bind(this);
   }
 
   componentDidMount() {
@@ -43,7 +37,6 @@ class PsalmsCompareAuthor extends Component {
     const db = firebase.database();
 
     db.ref('psalms').on('value', function(s){
-      // console.log(that.state.everything)
       s.forEach(function(childsnap){
         const c = childsnap.val();
 
@@ -68,32 +61,62 @@ class PsalmsCompareAuthor extends Component {
   // sort author info: how many psalms each author wrote and which ones they are; what are the top topics for each author
   sortInfo() {
     const everything = this.state.everything;
-    let authorArray=[{key:everything[0].author, value:1}];
+    let authorArray=[{key:everything[0].author, value:1, color:'#2C4564'}];
     let psalmsChapters=[{author:everything[0].author, chapter:[everything[0].chapter]}];
+    const colors=['#7b9139', '#98753C', '#702C5F', '#E8CA9B', '#3D4F06', '#091D36', '#3D052F', '#533607'];
+    let k = 0; // starting place for colors array
     // loop through and compare the massive list of authors to a new array of obj, adding up the times an author wrote a psalm 
     for (let i=1; i<everything.length; i++) {
       // if false new data is pushed into authorArray
       let flag=true;
+      let flagCount=0; // used to count author arrays
+      let missingAuthor; // used for mutiple authors in author arrays
       // loop through author Array once for each value of massive data array
       for (let j=0; j<authorArray.length; j++) {
         flag=true;
-        // if the author from everything array equals the author in the authorArr, update the value and add the chapterNum 
-        if (authorArray[j].key === everything[i].author) {
+
+        // if the author from everything array equals the author in the authorArr, update the value and add the chapterNum; check if typeof is object (indicates an array of authors)
+        if (typeof everything[i].author != 'object' && authorArray[j].key === everything[i].author) {
           authorArray[j].value++;
           psalmsChapters[j].chapter.push(', ' + everything[i].chapter);
           flag = false;
           break;
         }
+        else if (typeof everything[i].author === 'object') {
+          flagCount = everything[i].author.length;
+          for (let l=0; l<everything[i].author.length; l++) {
+            if (everything[i].author[l] === authorArray[j].key) {
+              authorArray[j].value++;
+              psalmsChapters[j].chapter.push(', ' + everything[i].chapter);
+              flag = false;
+              flagCount--;
+              break;              
+            }
+            else missingAuthor=everything[i].author[l];
+          }
+        }
       }
       // if flag is true, the author wasn't already in the authorArr, so push it
-      if (flag) {
-        const data = {key:everything[i].author, value:1};
+      if (flag && flagCount===0) {
+        // console.log(everything[i].author, colors[k])
+        const data = {key:everything[i].author, value:1, color:colors[k]};
         const data2 = {author:everything[i].author, chapter:[everything[i].chapter]};
         authorArray.push(data);
         psalmsChapters.push(data2);
+        k++; // move to next color in colors array
+      }
+      else if (flag && flagCount !== 0) {
+        const data = {key:missingAuthor, value:1, color:colors[k]};
+        const data2 = {author:missingAuthor, chapter:[everything[i].chapter]};
+        authorArray.push(data);
+        psalmsChapters.push(data2);
+        k++; // move to next color in colors array        
       }
     }
-    console.log(authorArray)
+    // sort author array by values
+    authorArray.sort(function (a,b) {
+      return b.value - a.value;
+    })
     this.setState({authorArray:authorArray, psalmsChapters: psalmsChapters})
   }
 
@@ -101,79 +124,42 @@ class PsalmsCompareAuthor extends Component {
     this.setState({
       columns:[
         {Header: 'Author', accessor: 'author', id: 'Author', minWidth: 150},
-        {Header: 'Chapters', id: 'chapters', accessor: d => d.chapter, width: this.state.rowWidth-150, style: {'whiteSpace': 'unset'}}
+        {Header: 'Chapters', id: 'chapters', accessor: d => d.chapter, minWidth: this.state.rowWidth-150, style: {'whiteSpace': 'unset'}}
       ]
     })
   }
 
-  // for pie chart
-  // mouseOverHandler(d, e) {
-  //   console.log(d, e)
-  //   this.setState({
-  //     showToolTip: true,
-  //     top: `${e.y - 10}px`,
-  //     left: `${e.x + 10}px`,
-  //     value: d.value,
-  //     key: d.data.key});
-  // }
-  // mouseMoveHandler(e) {
-  //   // console.log(this.state.showToolTip)
-  //   if (this.state.showToolTip) {
-  //     this.setState({ top: `${e.y}px`, left: `${e.x + 10}px` });
-  //   }
-  // }
-  // mouseOutHandler() {
-  //   this.setState({showToolTip: false});
-  // }
-  // createTooltip() {
-  //   if (this.state.showToolTip) {
-  //     return (
-  //       // <ToolTip
-  //       //   top={this.state.top}
-  //       //   left={this.state.left}
-  //       // >
-  //       //   The value of {this.state.key} is {this.state.value}
-  //       // </ToolTip>
-  //       <Tooltip
-  //         placement='right'
-  //         isOpen={this.state.showToolTip}
-  //         target='chart'
-
-  //       >
-  //         The value of {this.state.key} is {this.state.value}
-  //       </Tooltip>
-  //     );
-  //   }
-  //   return false;
-  // }  
-
   render() {
-    // console.log(this.state.columns)
-    // console.log(this.state.psalmsChapters);
-    // console.log(this.state.rowWidth)
-
     return(
       <PsalmsCompareWrapper
         heading='Compare Authors'
-        // className='content__button-row--fullWidth'
         compare1Link='/psalmsCompareAll'
         compare1Title='Compare All Psalms'
         compare2Link='/psalmsCompareTopics'
         compare2Title='Compare Topics'     
         className2='content--fullWidth content__pieChart'   
       >
-        <div className='content--centered'>
+        <div className='content--centered content__pieChart'>
+          {/* Legend */}
+          <div className='content--flex content--left'>
+            {this.state.authorArray.map((a) => {
+              return(
+                <LegendCircle color={a.color} key={a.key}>{a.key} ({a.value})</LegendCircle>
+              )
+            })}            
+          </div>
+
           <PieChart
             // labels
             data={this.state.authorArray}
             styles={{
               '.chart_text': {
                 fontSize: '1em',
-                fill: '#fff'
+                fill: '#fff',
+                display: 'inline-block'
               }
             }}
           />
-          <Legend data={this.state.authorArray} dataId={'value'} horizontal />
 
         </div>
         <div id='tableRow' className='content content--fullWidth'>
