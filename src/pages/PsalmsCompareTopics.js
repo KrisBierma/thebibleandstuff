@@ -19,12 +19,14 @@ class PsalmsCompareTopic extends Component {
       pageSize: '',
       sorted: '',
       filtered: '',
-      versesFound: ''
+      versesFound: [],
+      resultsClassName: ''
     }
     this.renderTable=this.renderTable.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.getData = this.getData.bind(this);
+    this.openNewTab = this.openNewTab.bind(this);
   }
 
   componentDidMount() {
@@ -41,187 +43,256 @@ class PsalmsCompareTopic extends Component {
     this.setState({wordToFind: value})
   }
 
+  // when the user clicks on a chapter from the topics table
+  openNewTab(url) {
+    console.log(url)
+    window.open(url, '_blank')
+  }
 
+  // changeResultsClassname() {
+  //   this.setState({resultsClassName: 'results--columns'});
+  // }
 
   // api call to ESV to get verses with user's word
   submitForm(e) {
-    console.log('here')
     e.preventDefault();
     const word = this.state.wordToFind;
-    const page = 1;
+    let page = 1;
     const queryURL = 'https://api.esv.org/v3/passage/search/';
-    const config = {
-      headers: {
-        'Authorization': process.env.REACT_APP_ESV_API_KEY
-      },
-      params : {
-        'q': word,
-        'page-size': 100,
-        'page': page
-      }
-    };   
-    const timeout = 5000;
-    axios.get(queryURL, config, timeout)
-    .then((res) => {
-      console.log(res.data.results);
-      const results = res.data.results;
-      let versesFound = [];
-      results.forEach(p => {
-        const str = p.reference;
-        if (str.startsWith('Psalm')){
-          console.log(p)
-          versesFound.push(`${p.reference}, `)
+    const booksAfterPsalms = ['Proverbs', 'Ecclesiastes', 'Song', 'Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi', 'Matthew','Mark','Luke','John','Acts','Romans','Corinthians','Thessalonians','Galatians','Ephesians','Philippians','Colossians','Titus','Philemon','Hebrews','James','Timothy', 'Peter', 'John', 'Jude','Revelation'];
+    let flag = false; // not done checking the results
+    this.setState({resultsClassName: ''}); // reset results to one column
+
+    // set func as const and call afterward to bind this
+    const sendQuery = (page) => {
+      console.log("page "+page)
+      const config = {
+        headers: {
+          'Authorization': process.env.REACT_APP_ESV_API_KEY
+        },
+        params : {
+          'q': word,
+          'page-size': 100,
+          'page': page
+        }
+      };   
+      const timeout = 5000;
+      axios.get(queryURL, config, timeout)
+      .then((res) => {
+        console.log(res.data.results);
+        // all results from Bible on specified page
+        const results = res.data.results;
+        console.log("results length: "+results.length)
+
+        // if no results, stop function altogether
+        if (results.length === 0) {
+          return
+        };
+
+        let versesFound = [];
+        results.forEach(p => {
+          const str = p.reference;
+          let book = str.split(' ');
+          // if the book is a number book, book = the second word, ie. Peter, Timothy
+          if (book[0] === '1' || book[0] === '2' || book[0] === '3') {
+            book = book[1];
+          }
+          else {
+            book = book[0]; // else it's the first word, ie Genesis, Exodus, Song
+          }
+          // if the results include books after Psalms, stop function
+          if (booksAfterPsalms.includes(book)) {
+            flag = true; // done checking results
+            return;
+          }
+          // if results have psalms, push reference into versesFound
+          else if (str.startsWith('Psalm')){
+            versesFound.push(p.reference)
+          }
+
+        })
+
+        // if less than 100 results and none in Psalms (or the results start in any book after the psalms) then return 'wasn't found' msg
+        if (versesFound.length === 0 && results.length < 100 && flag) {
+          versesFound.push('This word wasn\'t found in the Psalms.');
+          this.setState({versesFound:versesFound})
+        }
+        // if 100 results but not in psalms, send query again until psalms found
+        else if (versesFound.length === 0 && page < 6 && !flag) {
+          page++;
+          sendQuery(page)
+          versesFound.push('This word wasn\'t found in the Psalms (or the word (like God, Father) is all over the place and the serach was too great!');
+          this.setState({versesFound:versesFound})
+        }
+        else if (versesFound.length > 0) {
+          // set columns to display results
+          this.setState({
+            resultsClassName: 'results--columns',
+            versesFound:versesFound
+          });
+        }
+        // if no verses were found and the flag signals finding a book after psalms, the word wasn't found
+        else if (versesFound.length === 0 && flag) {
+          versesFound.push('This word wasn\'t found in the Psalms.');
+          this.setState({versesFound:versesFound})          
         }
       })
-      console.log(versesFound);
+      .catch(error => {
+        console.log(error)
+      })
+    }
+    // validate user-entered word; take out anything with 1 or 2 letters and words on the list below
+    const wordsToAvoid = ['God', 'Lord', 'LORD'];
+    let versesFound;
+    if (word.length < 3 || wordsToAvoid.includes(word)) {
+      versesFound.push('This word is too short.');
       this.setState({versesFound:versesFound})
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    }
+    else if (wordsToAvoid.includes(word)) {
+      versesFound.push('This word is used so frequently our search engine got dizzy. Please try another word.');
+      this.setState({versesFound:versesFound})
+    }
+    else sendQuery(page);
   }
 
   getData() {
     const db = firebase.database();
     const topicsArr = ['praise', 'thanksgiving', 'triumphVictory', 'remembrance', 'mercy', 'confessionRepentance', 'godlinessRighteousness', 'instructionProverbs', 'lawCommands', 'ungodliness', 'enemies', 'lament', 'cryForHelp', 'protectionDeliverance', 'comfort', 'provision', 'restoration', 'healing', 'dependence', 'nature', 'aBlessing', 'natureOfGod', 'songOfAscents'];
-    const topicsObj = {praise:[], thanksgiving: [], triumphVictory: [], remembrance: [], mercy: [], confessionRepentance: [], godlinessRighteousness: [], instructionProverbs: [], lawCommands: [], ungodliness: [], enemies: [], lament: [], cryForHelp: [], protectionDeliverance: [], comfort: [], provision: [], restoration: [], healing: [], dependence: [], nature: [], aBlessing: [], natureOfGod: [], songOfAscents: []};
-
-    db.ref('psalms').on('child_added', function(snapshot) {
+    const topicsObj = [{'topic': 'praise', 'chapter':[]}, {'topic': 'thanksgiving', 'chapter': []}, {'topic': 'triumphVictory', 'chapter': []}, {'topic': 'remembrance', 'chapter': []}, {'topic': 'mercy', 'chapter': []}, {'topic': 'confessionRepentance', 'chapter': []}, {'topic': 'godlinessRighteousness', 'chapter': []}, {'topic': 'instructionProverbs', 'chapter': []}, {'topic': 'lawCommands', 'chapter': []}, {'topic': 'ungodliness', 'chapter': []}, {'topic': 'enemies', 'chapter': []}, {'topic': 'lament', 'chapter': []}, {'topic': 'cryForHelp', 'chapter': []}, {'topic': 'protectionDeliverance', 'chapter': []}, {'topic': 'comfort', 'chapter': []}, {'topic': 'provision', 'chapter': []}, {'topic': 'restoration', 'chapter': []}, {'topic': 'healing', 'chapter': []}, {'topic': 'dependence', 'chapter': []}, {'topic': 'nature', 'chapter': []}, {'topic': 'aBlessing', 'chapter': []}, {'topic': 'natureOfGod', 'chapter': []}, {'topic': 'songOfAscents', 'chapter': []}];
+    const that = this;
+    
+    db.ref('psalms').once('value', function(snapshot) {
+      // console.log(snapshot.val())
       const data = snapshot.val();
       // loop through each psalm from db
-      for (const prop in data) {
-        // lop off 'topic-' from the prop
-        const newProp = prop.slice(6);
-        // check if the prop is a topic/ in the topics array
-        if (topicsArr.includes(newProp)) {
-          // if so, push check if it's the first entry
-          if (topicsObj[newProp].length === 0 ) {
-            topicsObj[newProp].push(data.chapterNum);
-          }
-          // else push the chapterNum + a comma into the topicsObj array
-          else {
-            // console.log(topicsObj[newProp])
-            topicsObj[newProp].push(`, ${data.chapterNum}`);
+      const newData = Object.values(data);
+      for (let h=0; h<newData.length; h++) {
+        for (const prop in newData[h]) {
+          // lop off 'topic-' from the prop
+          const newProp = prop.slice(6);
+          // check if the prop is a topic/ in the topics array
+          if (topicsArr.includes(newProp)) {
+            // if so, push check if it's the first entry
+            for (let i = 0; i<topicsObj.length; i++) {
+              // find where in the topicsObj the newProp is
+              if (topicsObj[i].topic === newProp) {
+                topicsObj[i].chapter.push(newData[h].chapterNum)
+                break;
+              }
+            }
           }
         }
       }
+    })
+    .then(function() {
+      changeName();
+      that.setState({newTopicsObj: topicsObj})
     });
-    let newTopicsObj = [];
 
-    for (let props in topicsObj) {
-      let name;
-
-      switch (props) {
-        case 'praise':
-          name = 'Praise*';
-          break;
-        case 'thanksgiving':
-          name = 'Thanksgiving';
-          break;
-        case 'triumphVictory':
-          name = 'Triumph, victory';
-          break;
-        case 'remembrance':
-          name = 'Remembrance, recall, history';
-          break;
-        case 'mercy':
-          name = 'Mercy';
-          break;
-        case 'confessionRepentance':
-          name = 'Confession, repentence, forgiveness';
-          break;
-        case 'godlinessRighteousness':
-          name = 'Godliness, righteousness';
-          break;
-        case 'instructionProverbs':
-          name = 'Instruction, proverbs';
-          break;
-        case 'lawCommands':
-          name = 'Law, commands**';
-          break;
-        case 'ungodliness':
-          name = 'Ungodliness, wickedness';
-          break;
-        case 'enemies':
-          name = 'Enemies';
-          break;
-        case 'lament':
-          name = 'Lament';
-          break;
-        case 'cryForHelp':
-          name = 'Cry for Help';
-          break;
-        case 'protectionDeliverance':
-          name = 'Protection, deliverance';
-          break;
-        case 'comfort':
-          name = 'Comfort';
-          break;
-        case 'provision':
-          name = 'Provision';
-          break;
-        case 'restoration':
-          name = 'Restoration';
-          break;
-        case 'healing':
-          name = 'Healing***';
-          break;
-        case 'dependence':
-          name = 'Dependence on, desire for God';
-          break;
-        case 'nature':
-          name = 'Nature';
-          break;
-        case 'aBlessing':
-          name = 'Blessing';
-          break;
-        case 'natureOfGod':
-          name = 'Nature of God';
-          break;
-        case 'songOfAscents':
-          name='**** Song of Ascents';
-          break;
-        default:
-          console.log('none found');
-          break;
+    function changeName() {
+      for (let i=0; i<topicsObj.length; i++) {
+        let topic = topicsObj[i].topic;
+        let name;
+        switch (topic) {
+          case 'praise':
+            name = 'Praise*';
+            break;
+          case 'thanksgiving':
+            name = 'Thanksgiving';
+            break;
+          case 'triumphVictory':
+            name = 'Triumph, victory';
+            break;
+          case 'remembrance':
+            name = 'Remembrance, recall, history';
+            break;
+          case 'mercy':
+            name = 'Mercy';
+            break;
+          case 'confessionRepentance':
+            name = 'Confession, repentence, forgiveness';
+            break;
+          case 'godlinessRighteousness':
+            name = 'Godliness, righteousness';
+            break;
+          case 'instructionProverbs':
+            name = 'Instruction, proverbs';
+            break;
+          case 'lawCommands':
+            name = 'Law, commands**';
+            break;
+          case 'ungodliness':
+            name = 'Ungodliness, wickedness';
+            break;
+          case 'enemies':
+            name = 'Enemies';
+            break;
+          case 'lament':
+            name = 'Lament';
+            break;
+          case 'cryForHelp':
+            name = 'Cry for Help';
+            break;
+          case 'protectionDeliverance':
+            name = 'Protection, deliverance';
+            break;
+          case 'comfort':
+            name = 'Comfort';
+            break;
+          case 'provision':
+            name = 'Provision';
+            break;
+          case 'restoration':
+            name = 'Restoration';
+            break;
+          case 'healing':
+            name = 'Healing***';
+            break;
+          case 'dependence':
+            name = 'Dependence on, desire for God';
+            break;
+          case 'nature':
+            name = 'Nature';
+            break;
+          case 'aBlessing':
+            name = 'Blessing';
+            break;
+          case 'natureOfGod':
+            name = 'Nature of God';
+            break;
+          case 'songOfAscents':
+            name='Song of Ascents****';
+            break;
+          default:
+            console.log('none found');
+            break;
+        }
+        topicsObj[i].topic=name;
       }
-
-      const data = {topic: name, chapter:topicsObj[props]}
-      newTopicsObj.push(data);
-    }
-    // console.log(this.state.topicsObj)
-    this.setState({newTopicsObj: newTopicsObj});
-    // this.setState({newTopicsObj: [{topic:'hi', chapter:['2', '3', '4']}, {topic:'hi2', chapter:['2','3']}]})
+    } //end func changeName
   }
 
   // make chart wth 2 headings: topics, psalms
   renderTable() {
-    // console.log(this.state.newTopicsObj)
     this.setState({
       columns:[
         {Header: 'Topic', accessor: 'topic', id: 'topic', width: 300},
-        {Header: 'Chapters', accessor: d => d.chapter, id: 'chapter', minWidth: 500}
+        {
+          Header: 'Chapters', 
+          accessor: 'chapter',
+          Cell: props => {
+            let chapterLinks=[];
+            props.value.map(d => {
+              chapterLinks.push(<a href={`/psalm/${d}`} key={props.original.topic+d} onClick={(e) => {this.openNewTab(`/psalm/${d}`)}}>{d}</a>);
+              chapterLinks.push(', ');
+            })
+            return(chapterLinks)
+          },
+          id: 'chapter', 
+          minWidth: 500,
+        },
       ]
-    })
-    // const obj = this.state.newTopicsObj;
-    // const obj = JSON.parse(JSON.stringify(this.state.newTopicsObj));
-    // console.log(obj, obj.length)
-    // obj.forEach(d => {
-    //   console.log(d.topic, d.chapter.join(' '))
-    // })
-
-    // return(
-    //   <tbody>
-    //     {this.state.newTopicsObj.map(d => (
-    //       <tr>
-    //         <td>{d.topic}</td>
-    //         {/* {d.chapter.map(c => ( */}
-    //           <td>{d.chapter.map(c => (c.chapter))}</td>
-    //         {/* ))} */}
-    //       </tr>
-    //     ))}
-    //   </tbody>
-    // )
+    });
   }
 
   render() {
@@ -235,21 +306,28 @@ class PsalmsCompareTopic extends Component {
         compare2Title='Compare Authors'
         className2='content__table--compareTopics'
       >
-
       <ReactTable
         data={this.state.newTopicsObj}
         columns={this.state.columns}
         showPagination={false}
         className='-highlight table--centered'
         defaultPageSize={23}
-        // getNoDataProps={(state, rowInfo, column, instance) => {
-        //   console.log(state.data)
-        // }}
+        // getNoDataProps={(state, row)=>
+        //   {
+        //     console.log(state);
+        //     console.log(row);
+        //   }}
+        // getTrProps={(state,rowInfo, column, instance) => (
+        //   console.log('here')
+        // )}
+        getTrProps={(state, rowInfo, column, instance) => ({
+          onClick: e => {
+            e.preventDefault();
+            // console.log(rowInfo)
+        }})}
       />
 
-      {/* {this.renderTable()} */}
       <div className='footnote'>
-        {/* <p>Is it centered on God, his people, or is it an individual cry for help?</p> */}
         <p>* They all have an element of praise somewhere in them, but some Psalms are focused on praising God and some are a cry to God.</p>
         <p>** Similar words: law, statute, precept, decree, command, word, way</p>
         <p>** <a href='https://biblehub.com/parallel/psalms/119-1.htm'>This</a> is a good resource for finding the Hebrew of these words and its meaning.</p>
@@ -259,14 +337,18 @@ class PsalmsCompareTopic extends Component {
         <p>how many start with 'praise the Lord'?</p> */}
       </div>
 
-      <div>
+      <div className='form__wordSearch'>
         <form onSubmit={this.submitForm}>
-          {/* <label>Search for a specific word.  */}
-            <input type='text' name='wordToFind' value={this.state.wordToFind} onChange={this.handleChange} placeholder='Serch for a specific word.'></input>
-          {/* </label> */}
-          <input type='submit' value='Submit'></input>
+          <input type='text' name='wordToFind' value={this.state.wordToFind} onChange={this.handleChange} placeholder='Search for a specific word.'></input>
+          <input type='submit' value='Submit' className='form__wordSearch__button'></input>
         </form>
-        <p id='results'>{this.state.versesFound}</p>
+        <div id='results' className={this.state.resultsClassName}>
+          {this.state.versesFound.map((v) => {
+            return(
+              <p key={v}>{v}</p>
+            )
+          })}        
+        </div>
       </div>
       </PsalmsCompareWrapper>
     )

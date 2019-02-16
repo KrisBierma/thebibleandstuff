@@ -22,13 +22,14 @@ class PsalmsCompareAuthor extends Component {
 
   componentDidMount() {
     this.getInfo();
-    var w =document.getElementById('tableRow').clientWidth;
+    // var w =document.getElementById('tableRow').clientWidth;
     // console.log(w)
-    w-=40; // minus padding
+    // w-=40; // minus padding
     // set row width for table before making them
-    this.setState({rowWidth: w}, () => {
-      this.makeTableHeaders();
-    })
+    this.makeTableHeaders();
+    // this.setState({rowWidth: w}, () => {
+    //   this.makeTableHeaders();
+    // })
   }
 
   // get data from firebase db
@@ -63,7 +64,8 @@ class PsalmsCompareAuthor extends Component {
     const everything = this.state.everything;
     let authorArray=[{key:everything[0].author, value:1, color:'#2C4564'}];
     let psalmsChapters=[{author:everything[0].author, chapter:[everything[0].chapter]}];
-    const colors=['#7b9139', '#98753C', '#702C5F', '#E8CA9B', '#3D4F06', '#091D36', '#3D052F', '#533607'];
+    // 3 browns, 3 greens, 3 blues, 3 purples (dark, med., light)
+    const colors=['#533607', '#98753C', '#E8CA9B', '#3D4F06', '#7b9139', '#CADD93', '#091D36', '#2C4564', '#6A7E98', '#3D052F', '#702C5F', '#AB729D'];
     let k = 0; // starting place for colors array
     // loop through and compare the massive list of authors to a new array of obj, adding up the times an author wrote a psalm 
     for (let i=1; i<everything.length; i++) {
@@ -117,14 +119,31 @@ class PsalmsCompareAuthor extends Component {
     authorArray.sort(function (a,b) {
       return b.value - a.value;
     })
+    console.log(authorArray);
+    console.log(psalmsChapters)
     this.setState({authorArray:authorArray, psalmsChapters: psalmsChapters})
   }
 
   makeTableHeaders() {
     this.setState({
       columns:[
-        {Header: 'Author', accessor: 'author', id: 'Author', minWidth: 150},
-        {Header: 'Chapters', id: 'chapters', accessor: d => d.chapter, minWidth: this.state.rowWidth-150, style: {'whiteSpace': 'unset'}}
+        {Header: 'Author', 
+        accessor: 'author', 
+        id: 'Author', 
+        minWidth: 100,
+        maxWidth: 170,
+        style: {
+          'whiteSpace': 'normal'
+        }
+      },
+      {
+        Header: 'Chapters', 
+        id: 'chapters', 
+        accessor: d => d.chapter, 
+        minWidth: 100,
+        style: {
+          'whiteSpace': 'unset'
+      }}
       ]
     })
   }
@@ -140,26 +159,25 @@ class PsalmsCompareAuthor extends Component {
         className2='content--fullWidth content__pieChart'   
       >
         <div className='content--centered content__pieChart'>
+          <PieChart
+            // labels
+            data={this.state.authorArray}
+            // styles={{
+            //   '.chart_text': {
+            //     fontSize: '1em',
+            //     fill: '#fff',
+            //     display: 'inline-block'
+            //   }
+            // }}
+          />          
           {/* Legend */}
-          <div className='content--flex content--left'>
+          <div className='content--flex content__pieChart__legend'>
             {this.state.authorArray.map((a) => {
               return(
                 <LegendCircle color={a.color} key={a.key}>{a.key} ({a.value})</LegendCircle>
               )
             })}            
           </div>
-
-          <PieChart
-            // labels
-            data={this.state.authorArray}
-            styles={{
-              '.chart_text': {
-                fontSize: '1em',
-                fill: '#fff',
-                display: 'inline-block'
-              }
-            }}
-          />
 
         </div>
         <div id='tableRow' className='content content--fullWidth'>
@@ -169,6 +187,10 @@ class PsalmsCompareAuthor extends Component {
             showPagination={false}
             minRows={0}
             className='-highlight table--centered'
+            // style={{
+            //   overflow: 'auto',
+            //   wordWrap: 'break-word'
+            // }}
             // sorted={[{id: 'Author', desc: true}]}
             />
         </div>      

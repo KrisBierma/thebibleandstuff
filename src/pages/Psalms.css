@@ -82,7 +82,10 @@ li a, p a, li{
 li a:hover, .bioWords a:hover {
   color:white;
 }
-
+/* hyperlinks */
+/* .link{
+  color: #D81E23;
+} */
 /* header */
 .header--main{
   z-index: 99;
@@ -201,6 +204,12 @@ li a:hover, .bioWords a:hover {
   /* margin: auto; */
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+.content__pieChart__legend{
+  text-align: -webkit-right;
+  text-align: right;
+  margin: auto;
 }
 .content__table{
   display: inline-table;
@@ -256,6 +265,25 @@ li a:hover, .bioWords a:hover {
   display: inline-block;
   margin-right: 5px;
 }
+#results{
+  margin-top: 10px;
+}
+.results--columns{
+  columns: 5;
+}
+#results p{
+  font-size: 1rem;
+}
+.form__wordSearch{
+  padding: 10px;
+  border-top: 1px black dotted;
+}
+.form__wordSearch__button{
+  margin-left: 10px;
+}
+.form__wordSearch input{
+  border-radius: 2px;
+}
 
 /* light #c2d03b */
 /* medium #7b9139 */
@@ -276,5 +304,24 @@ li a:hover, .bioWords a:hover {
   font-size: 0.9em;
 }
 .footnote a{
-  color: black;
+  color: #D81E23;
 }
+
+@media only screen and (max-width: 850px) {
+  #.results--columns{
+    columns: 4;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  #.results--columns{
+    columns: 3;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  #.results--columns{
+    columns: 2;
+  }
+}
+

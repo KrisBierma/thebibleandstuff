@@ -1,3 +1,4 @@
+// used with pie chart on psalms compare author
 import React from 'react';
 
 const LegendCircle = (props) => {

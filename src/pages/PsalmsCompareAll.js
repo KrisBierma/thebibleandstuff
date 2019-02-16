@@ -40,9 +40,20 @@ class PsalmsCompareAll extends Component {
           // headings: c.headings,
           wordCount: c.wordCount
         };
-
+// console.log(data);
+        if (typeof data.author === 'object') {
+          console.log(data.author)
+          data.author = data.author[0] + ', ' + data.author[1]
+        }
         // push the data into the array of all chapters
         let x = that.state.everything;
+        // console.log(x)
+        // x.map(a => {
+          // console.log(a.author)
+          // if (typeof a.author === 'object') {
+            // console.log(a.author)
+          // }
+        // })
         x.push(data);
         that.setState({everything: x});
       })
@@ -52,15 +63,15 @@ class PsalmsCompareAll extends Component {
         columns:[
           {Header: 'Chapter', accessor:'chapter', minWidth:65, maxWidth:75, id: 'row'},
           {Header: 'Book', accessor:'book', minWidth:65, maxWidth:75},
-          {Header: 'Author', accessor:'author'},
-          {Header: 'First Verse', accessor:'firstV', minWidth:300, maxWidth:550,
+          {Header: 'Author', accessor:'author', maxWidth: 150, style: {whiteSpace: 'normal'}},
+          {Header: 'First Verse', accessor:'firstV', minWidth:100, maxWidth:550,
             style:{
               width: "100%",
               height: "100%",
               whiteSpace: 'normal'
           }},
-          {Header: 'Topics', accessor:'topics', style:{whiteSpace: 'normal'}},
-          {Header: 'Word Count', accessor:'wordCount'},    
+          // {Header: 'Topics', accessor:'topics', style:{whiteSpace: 'normal'}},
+          {Header: 'Word Count', accessor:'wordCount', maxWidth: 100},    
         ]
       })
     });
