@@ -83,28 +83,28 @@ class PsChap extends Component {
       this.setState({wholeChapter: "There was an error getting this chapter from ESV. Please try again later!"})
     });
 
-    // just gets first verse
-    const passage2 = `Psalm ${this.state.chapterNum}:1`;
-    const config2 = {
-      headers: {
-        'Authorization': process.env.REACT_APP_ESV_API_KEY
-      },
-      params : {
-        'q': passage2,
-        'include-headings': false,
-        'include-footnotes': false,
-        'include-verse-numbers': false,
-        'include-short-copyright': false,
-        'include-passage-references': false,
-        'indent-poetry': false,
-        'indent-paragraphs': 0
-      }
-    };
-    axios.get(queryURL, config2).then((res) =>{
-      // console.log(res.data);
-      console.log('Psalm '+this.state.chapterNum);
-      console.log(res.data.passages[0]);
-    });
+    // just gets first verse for data entry
+    // const passage2 = `Psalm ${this.state.chapterNum}:1`;
+    // const config2 = {
+    //   headers: {
+    //     'Authorization': process.env.REACT_APP_ESV_API_KEY
+    //   },
+    //   params : {
+    //     'q': passage2,
+    //     'include-headings': false,
+    //     'include-footnotes': false,
+    //     'include-verse-numbers': false,
+    //     'include-short-copyright': false,
+    //     'include-passage-references': false,
+    //     'indent-poetry': false,
+    //     'indent-paragraphs': 0
+    //   }
+    // };
+    // below used for data entry
+    // axios.get(queryURL, config2).then((res) =>{
+    //   console.log('Psalm '+this.state.chapterNum);
+    //   console.log(res.data.passages[0]);
+    // });
   }
 
   // put api result into array, filter out unwanted words 
@@ -196,7 +196,17 @@ class PsChap extends Component {
   // find recurring lines of 3+ words
   recurringLines(props) {
     // change psalm to array
-    const arr = this.state.wholeChapter.replace(/[.,;:!?“”‘\b’\b]/g, '').split(/\s/).filter(word => word !== '');
+    let arr = this.state.wholeChapter.replace(/[.,;:!?“”‘\b’\b]/g, '').split(/\s/).filter(word => word !== '');
+    // console.log(arr)
+    // make everything lowercase except a few words
+    const notLower = ['God', 'Lord', 'LORD'];
+    for (let i = 0; i < arr.length; i++) {
+      if (notLower.includes(arr[i])) {}
+      else {
+        arr[i] = arr[i].toLowerCase();
+        // console.log(w.toLowerCase())
+      }      
+    }
     // console.log(arr)
     let tempArr = [];
     let phrases = [];
@@ -212,8 +222,7 @@ class PsChap extends Component {
 
           // a match of 3 words in a row gets pushed to tempArr
           tempArr.push(arr[i], arr[i+1], arr[i+2]);
-
-          // check to see if 4 or more words match and push to tempArr if so
+          // check to see if 3 or more words match and push to tempArr if so
           let k = 3;
           while (arr[i+k] === arr[j+k]) {
             tempArr.push(arr[i+k]);
