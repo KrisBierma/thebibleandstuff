@@ -24,7 +24,7 @@ class PsWordCountTable extends Component {
         <tbody>
           {this.props.freq2.map((row, i) => (
             <tr key={`${row.wordle}.${i}`}>
-              <td>{row.wordle}</td>
+              <td className='table--word__data'>{row.wordle}</td>
               <td>{row.value}</td>
             </tr>
             ))
@@ -37,7 +37,7 @@ class PsWordCountTable extends Component {
         <tbody>
           {this.props.freq.map((row, i) => (
             <tr key={`${row.wordle}.${i}`}>
-              <td>{row.wordle}</td>
+              <td className='table--word__data'>{row.wordle}</td>
               <td>{row.value}</td>
             </tr>
             ))
@@ -48,6 +48,7 @@ class PsWordCountTable extends Component {
   }
 
   render() {
+    // console.log(this.props)
     return(
       <div className='content content--centered content__table'>
         <table className='table--word'>

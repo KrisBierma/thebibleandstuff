@@ -43,8 +43,8 @@ class IndividualPsalm extends Component {
     })
   }
 
-  groupWordsParent(params) {
-    // console.log(params)
+  groupWordsParent(params, chap) {
+    console.log(params, chap)
     this.setState({
       freq2: params
     })
@@ -165,7 +165,7 @@ class IndividualPsalm extends Component {
           {/* Footnotes */}
           <div className='footnote'>
             <p>The word count only shows words with a frequency of 2 or more.</p>
-            <p>Grouping words takes out passive verbs, conjuntions, and articles, and it combines like terms.</p>
+            <p>Grouping words takes out passive verbs, conjunctions, and articles, and it combines like terms.</p>
           </div>
 
           {this.renderButtons()}

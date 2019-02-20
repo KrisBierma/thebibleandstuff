@@ -19,15 +19,15 @@ class PsalmsFaq extends Component {
           <Col>
             <Row>
               <h2>What is this site?</h2>
-              <p>How cool would it be, I thought, to graph the words from a psalm. I wanted to know if a particular psalm was God-centric or self-centric, and I though an actual word count would help with that.</p>
+              <p>How cool would it be, I thought, to graph the words from a psalm. I wanted to know if a particular psalm was God-centric or self-centric, and I thought an actual word count would help with that.</p>
             </Row>
             <Row>
               <h2>What translation are you using?</h2>
-              <p>I like the English Standard Version (ESV) becuase it takes out any verse or other reference from the chapter and instead reads like a normal book of poetry. <Link className='psalmLink' to='https://www.esv.org/'>This</Link> is the website I used.</p>
+              <p>I like the English Standard Version (ESV) because it takes out verse numbers and other references from the chapter. This makes it read like a normal book of poetry. <a title="Go to the ESV website" target='_blank' rel="noopener noreferrer" href='https://www.esv.org/' className='psalmLink'>This</a> is the website I used.</p>
             </Row>
             <Row>
-              <h2>I have another question/ comment/ idea.</h2>
-              <p>Awesome! Contact me here, especially if you found something missing/ a mistake in the topics page.</p>
+              <h2>I have another question/comment/idea.</h2>
+              <p>Awesome! Contact me here.</p>
             </Row>
           </Col>
         </Row>

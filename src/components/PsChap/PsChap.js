@@ -111,11 +111,13 @@ class PsChap extends Component {
   // also counts words to find length of psalm
   getWords(string) {
     // replace . with spaces. Split string at spaces into individual words in an array. Start a new array of objects to hold words and their frequency.
-    const words = string.replace(/[.,;:!?“”‘\b’\b]/g, '').split(/\s/);
+    const words = string.replace(/[.,—;:!?“”‘\b’\b]/g, '').split(/\s/);
     // console.log(words)
 
     // put all to lowerCase except select words
-    const wordsNotLowercase = ['I', 'Lord', 'LORD', 'God', 'O', 'Israel', 'Selah', 'Jerusalem', 'Babylon', 'Zion'];
+    const wordsNotLowercase = ['I', 'Lord', 'LORD', 'God', 'O', 'Israel', 'Selah', 'Jerusalem', 'Babylon', 'Zion', 'David'];
+    // find capitalized words not at the beginning of the sentence, add to wordsNotLowercase
+
     for (let i=0; i<words.length; i++) {
       if (!wordsNotLowercase.includes(words[i])) {
         words[i] = words[i].toLowerCase();
@@ -123,7 +125,7 @@ class PsChap extends Component {
     }
 
     // filter out articles, conjunctions
-    const dontCount = ['and', 'or', 'but', 'the', 'by', 'a', 'an', 'on', 'to', 'is', 'are', 'am', 'was', 'were', 'in', 'for', 'are', 'of', '', 'with', 'as', 'at', 'be', 'do', 'shall', 'let', 'has', 'have', 'had', 'from', 'beside', 'then', 'that', 'get', 'also', 'which'];
+    const dontCount = ['and', 'or', 'but', 'the', 'by', 'a', 'an', 'on', 'to', 'is', 'are', 'am', 'was', 'were', 'in', 'for', 'are', 'of', '', 'with', 'as', 'at', 'be', 'do', 'shall', 'let', 'has', 'have', 'had', 'from', 'beside', 'then', 'that', 'get', 'also', 'which', 'because'];
 
     // loop through each dontCount word
     dontCount.forEach(function(noWord){
@@ -275,7 +277,7 @@ class PsChap extends Component {
     });
     // call this function in the parent (individualPsalm) which sends the freq array back to parent to use in pswordCount
     const data = [newFreq, this.state.count];
-    this.props.getPsWordCount(data);
+    this.props.getPsWordCount(data, this.props.chapterNum);
 
     // deep clone of array of obj from MDN
     const d = data[0];
@@ -365,6 +367,7 @@ class PsChap extends Component {
     sortingFunctions(2, 'es');
     sortingFunctions(3, 'ing');
     sortingFunctions(4, 'ness');
+    // need change y to ies
 
     function sortingFunctions(difference, toFind) {
       for (let i=0; i<data2.length; i++) {
@@ -465,7 +468,8 @@ class PsChap extends Component {
       }
     }
     // call the func in the parent 'individualPsalm' component to pass the data to it so it can then go to PsWordCount
-    this.props.groupWordsParent(newFreq2);
+    // console.log(this.props.chapterNum)
+    this.props.groupWordsParent(newFreq2, this.props.chapterNum);
   }
 
   render() {

@@ -233,8 +233,6 @@ class PsalmsLanding extends Component {
                     </FormGroup>
                     <p id='invalidMsg'>{this.state.invalidMsg}</p>
                     <Button tag={Link} to={`/psalmsCompare/${this.state.psalm1}&${this.state.psalm2}`}>Compare these Two</Button>
-                    {/* <button type='submit' 
-                    value='compareTwo' className='btn' onClick={this.submitForm}>Compare these two</button> */}
                   </Form>
                 </Row> 
 
@@ -243,7 +241,7 @@ class PsalmsLanding extends Component {
             </div>
 
             {/* just for data entry */}
-            <div>
+            {/* <div>
               <Form onSubmit={this.handleSubmit}>
               <Row>
               <Col>
@@ -333,7 +331,7 @@ class PsalmsLanding extends Component {
 </Row>
 
               </Form>
-            </div> 
+            </div>  */}
             
             {/* end data entry */}
             

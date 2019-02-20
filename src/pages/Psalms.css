@@ -69,7 +69,9 @@ tr:hover {background-color: #f5f5f5;}
 
 /* FAQ link */
 .psalmLink{
-  color:black;
+  /* color:black; */
+  color: #D81E23;
+
 }
 .psalmLink:hover{
   color:#7b9139;
@@ -120,6 +122,11 @@ li a:hover, .bioWords a:hover {
   margin:0;
   background-color: #ebf1da;
   justify-content: space-between;
+  background-image: url('../assets/images/fern2.png');
+  background-repeat: no-repeat;
+  background-position: right top;
+  /* <img className='fern' alt='fern' src={require('../assets/images/fern2.png')}></img> */
+
 }
 .content{
   background-color: white;
@@ -191,6 +198,8 @@ li a:hover, .bioWords a:hover {
 .content__form{
   padding: 20px;
   text-align: center;
+  display: inline-grid;
+  margin: auto;
 }
 .content__form--group{
   justify-content: center;
@@ -221,11 +230,19 @@ li a:hover, .bioWords a:hover {
 }
 .table--word{
   width: 100%;
+  max-width: 300px;
   margin-bottom: 20px;
 }
 .table--word th{
-  width: 95px;
-  padding-right: 5px;
+  /* width: 95px; */
+  /* padding-right: 5px; */
+}
+.table--word tr{
+  /* width: 95px; */
+}
+.table--word__data{
+  margin-right: 5px;
+  /* width: 100px; */
 }
 .table--centered{
   margin: auto;
@@ -308,19 +325,19 @@ li a:hover, .bioWords a:hover {
 }
 
 @media only screen and (max-width: 850px) {
-  #.results--columns{
+  .results--columns{
     columns: 4;
   }
 }
 
 @media only screen and (max-width: 650px) {
-  #.results--columns{
+  .results--columns{
     columns: 3;
   }
 }
 
 @media only screen and (max-width: 450px) {
-  #.results--columns{
+  .results--columns{
     columns: 2;
   }
 }

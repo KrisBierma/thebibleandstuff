@@ -20,8 +20,6 @@ class PsalmTableData extends Component {
       key: ''
     }
     this.getData = this.getData.bind(this);
-    // this.getit = this.getit.bind(this);
-    // this.getKey = this.getKey.bind(this);
   };
 
   componentDidMount() {
@@ -34,76 +32,53 @@ class PsalmTableData extends Component {
       this.setState({
         chapterNum: this.props.chapterNum
       }, () => {
-        // console.log('here')
         this.getData();
       })
     }
+    // else {this.getData();}
   }
 
   getData(){
     let that = this; // 'this' doesn't work inside db.ref() functions (maybe need arrow func to bind it)
-    // console.log('---------------------------')
-    // console.log(this.props.chapterNum)
     const db = firebase.database();
-    // let key;
-    // console.log(this.props.chapterNum)
-    // this.getKey();
-    db.ref('psalms').orderByChild('chapterNum').equalTo(this.props.chapterNum).on('child_added', function(s){
-      // db.ref('psalms').once('value').then(function(s){
-        // console.log(s)
-    // console.log(s.key)
-      that.state.key = s.key;
-        //  that.getData();
-  
+    
+    // this.props.chapterNum needs to be a string
+    let chap;
+    if (typeof this.props.chapterNum === 'number') {
+      chap = JSON.stringify(this.props.chapterNum)
+    }
+    else chap = this.props.chapterNum;
+
+    db.ref('psalms').orderByChild('chapterNum').equalTo(chap).on('child_added', function(s){
+      that.state.key = s.key;  
     })
 
-    // db.ref().off('value', getKey);
-
-    
-
-    // db.ref('psalms').once('child_added').then(function(snap){
-    //   // console.log(key)
-    //   console.log(snap.val())
-    //   console.log(snap.key) // the psalm number
-    //   console.log(snap.child('chapterNum').exists()) // this is good
-    // });
-  // }
-
-  // getData() {
-    // const db = firebase.database();
-    // let that = this;
     db.ref('psalms').once('value').then(function(s){
       // console.log(s.val()); // gives everything
-      // console.log(that)
       if (that.state.key !== undefined) {
-
-      // console.log(s.val()[that.state.key]);
-
-      const ps = s.val()[that.state.key];
-
-      if (ps !== undefined) {
-        that.setState({
-          author: ps.author,
-          book: ps.book,
-          firstVerse: ps.firstVerse,
-          headings: ps.headings,
-          // chapterNum: ps.chapterNum,
-          summary: ps.summary,
-          topic: ps.topic
-        });        
+        // console.log(s.val()[that.state.key]);
+        const ps = s.val()[that.state.key];
+        if (ps !== undefined) {
+          that.setState({
+            author: ps.author,
+            book: ps.book,
+            firstVerse: ps.firstVerse,
+            // headings: ps.headings,
+            // chapterNum: ps.chapterNum,
+            summary: ps.summary,
+            // topic: ps.topic
+          });        
+        }
+        else {
+          that.setState({
+            author: 'Having trouble getting data for you! Please try again later.'
+          })
+        }
       }
-      else {
-        that.setState({
-          author: 'Having trouble getting data for you! Please try again later.'
-        })
-      }
-    }
-
     });
   }
 
   render() {
-    // console.log(this.state)
     return(
       <table>
         {/* <tbody className='content__table'> */}
@@ -124,10 +99,10 @@ class PsalmTableData extends Component {
             <th>First Verse</th>
             <td>{this.state.firstVerse}</td>
           </tr>
-          <tr>
+          {/* <tr>
             <th>Topic</th>
             <td>{this.state.topic}</td>
-          </tr>
+          </tr> */}
           <tr>
             <th>Summary</th>
             <td>{this.state.summary}</td>
@@ -136,7 +111,6 @@ class PsalmTableData extends Component {
       </table>
     )
   }
-
 };
 
 export default PsalmTableData;
