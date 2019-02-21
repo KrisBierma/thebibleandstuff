@@ -156,19 +156,10 @@ class PsalmsCompareAuthor extends Component {
         compare1Title='Compare All Psalms'
         compare2Link='/psalmsCompareTopics'
         compare2Title='Compare Topics'     
-        className2='content--fullWidth content__pieChart'   
       >
         <div className='content--centered content__pieChart'>
           <PieChart
-            // labels
             data={this.state.authorArray}
-            // styles={{
-            //   '.chart_text': {
-            //     fontSize: '1em',
-            //     fill: '#fff',
-            //     display: 'inline-block'
-            //   }
-            // }}
           />          
           {/* Legend */}
           <div className='content--flex content__pieChart__legend'>
@@ -193,7 +184,16 @@ class PsalmsCompareAuthor extends Component {
             // }}
             // sorted={[{id: 'Author', desc: true}]}
             />
-        </div>      
+        </div>   
+
+        {/* Footnotes */}
+        <div className='footnote'>
+          <p><u>Author Timeline:</u></p>
+          <p className='tab'>~1571BC: Moses, <a href='https://www.biblestudytools.com/encyclopedias/isbe/korahites-sons-of-korah.html' target='_blank' rel='noopener noreferrer'>Sons of Korah</a>, Heman*</p>
+          <p className='tab'>~1000BC: David, Asaph, Ethan, Solomon (David's son)</p>
+          <p className='tab'>* Heman could be David’s contemporary (1 Chron 15:19) but was probably Judah’s grandson (1 Chron 2:6) since the other authors of Ps 88 were the Sons of Korah.</p>
+          <p><br></br>The total from the pie chart is 151 because Psalm 88 has two authors.</p>
+        </div>
       </PsalmsCompareWrapper>
     )
   }

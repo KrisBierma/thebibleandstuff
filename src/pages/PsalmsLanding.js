@@ -192,9 +192,9 @@ class PsalmsLanding extends Component {
     return(
       <Container>
         <PsHeader heading="Psalms" />
-        <Row className='content-wrapper'>
+        <Row className='content-wrapper content-wrapper__landingPage'>
           <Col className='mainCol'>
-            <div className='content'>
+            <div className='content content--border'>
               <h3><u>Click a Psalm to see the deets.</u></h3>
               <ul>
                 {psalms.map((psalm) => {
@@ -211,7 +211,7 @@ class PsalmsLanding extends Component {
             </div>
             <div>
               {/* compare all psalms */}
-              <div className='content content--flex'>
+              <div className='content content--border content--flex'>
                 <Row className='content__button-row content__button-row--bordered'>
                   <Button tag={Link} to={'/psalmsCompareAll'}>Compare All Psalms</Button>
                   <Button tag={Link} to={'/psalmsCompareAuthors'}>Compare Authors</Button>

@@ -8,14 +8,17 @@ const PsalmsCompareWrapper = (props) => (
   <Container>
     <PsHeader heading={props.heading}></PsHeader>
     <Row className='content-wrapper'>
-      <Row className={`content__button-row content__button-row--bordered ${props.className}`}>
+    <div className='content content--border content--flex content--fullWidth'>
+
+      <Row className='content__button-row content__button-row--bordered'>
         {props.para}
         <Button tag={Link} to={props.compare1Link}>{props.compare1Title}</Button>
         <Button tag={Link} to={props.compare2Link}>{props.compare2Title}</Button>
       </Row> 
-      <Row className={`content ${props.className2}`}>
+      <div className='content__table--compare'>
         {props.children}
-      </Row>        
+      </div> 
+    </div>       
     </Row>
 
     <Footer></Footer>        

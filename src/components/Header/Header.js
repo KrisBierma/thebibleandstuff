@@ -1,3 +1,5 @@
+// header of theBibleandStuff (not Psalms)
+
 import React from 'react';
 import { Button, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';

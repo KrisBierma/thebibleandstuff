@@ -30,30 +30,23 @@ class PsalmsCompareAll extends Component {
       s.forEach(function(childsnap){
         const c = childsnap.val();
 
-        // save data from db one chapter at a time
+        // save data from db one chapter at a time; chap and count need to be type number for table sorting
         let data = {
-          chapter: c.chapterNum,
+          chapter: parseInt(c.chapterNum),
           book: c.book,
           author: c.author,
           firstV: c.firstVerse,
           topics: c.topic,
           // headings: c.headings,
-          wordCount: c.wordCount
+          wordCount: parseInt(c.wordCount)
         };
-// console.log(data);
+
         if (typeof data.author === 'object') {
           console.log(data.author)
           data.author = data.author[0] + ', ' + data.author[1]
         }
         // push the data into the array of all chapters
         let x = that.state.everything;
-        // console.log(x)
-        // x.map(a => {
-          // console.log(a.author)
-          // if (typeof a.author === 'object') {
-            // console.log(a.author)
-          // }
-        // })
         x.push(data);
         that.setState({everything: x});
       })
@@ -82,13 +75,11 @@ class PsalmsCompareAll extends Component {
     return(
       <PsalmsCompareWrapper
         heading='Compare all the Psalms'
-        // className='content__button-row--bordered'
         compare1Link='/psalmsCompareAuthors'
         compare1Title='Compare Authors'
         compare2Link='/psalmsCompareTopics'
         compare2Title='Compare Topics'
         para={<u className='content__button-row__p'>Click a table heading to sort or...</u>}
-        className2='content__table--compareAll'
       >
       <ReactTable 
         data={this.state.everything} 

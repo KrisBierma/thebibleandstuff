@@ -10,12 +10,14 @@ label{
 /* only in PsHeader */
 h1{
   color:#ffffff;
-  font-size: 45px;
+  font-size: 56px;
   font-family: 'Caveat', cursive, 'Arial', 'Helvetica Neue';
-  background-color:transparent;
-  padding:10px;
-  margin-bottom:0px;
-  line-height:1;
+  background-color: transparent;
+  padding: 10px;
+  margin-bottom: 0px;
+  line-height: 1;
+  text-shadow: 2px 1px 1px black;
+  text-decoration: none;
 }
 /* subheadings */
 h2{
@@ -30,6 +32,9 @@ h3{
 }
 p{
   font-size:18px;
+}
+.tab{
+  margin-left: 1em;
 }
 h2, h3, p{
   font-family:'Arial', 'Helvetica Neue', Helvetica, sans-serif;
@@ -122,16 +127,22 @@ li a:hover, .bioWords a:hover {
   margin:0;
   background-color: #ebf1da;
   justify-content: space-between;
-  background-image: url('../assets/images/fern2.png');
+  background-image: url('../assets//images/brushed-alum-dark.png');
+}
+.content-wrapper__landingPage{
+  /* background-image: url('../assets/images/fern2.png');
   background-repeat: no-repeat;
-  background-position: right top;
-  /* <img className='fern' alt='fern' src={require('../assets/images/fern2.png')}></img> */
-
+  background-position: right top; */
+  /* background-size: 5%; */  
 }
 .content{
   background-color: white;
   margin-bottom: 50px;
   padding: 20px;
+}
+.content--border{
+  border: solid #131520 1px;
+  border-radius: 3px; 
 }
 .content--fullWidth{
   width: 100%;
@@ -161,7 +172,7 @@ li a:hover, .bioWords a:hover {
 }
 .content__button-row{
   justify-content: space-around;
-  padding-bottom:20px;
+  /* padding-bottom:20px; */
   display: flex;
   width: 100%;
 }
@@ -171,7 +182,8 @@ li a:hover, .bioWords a:hover {
 .content__button-row--bordered{
   border-bottom: dotted 7px #ebf1da;
   background-color: white;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
+  /* margin-bottom: 20px; */
 }
 .content__button-div{
   float: right;
@@ -180,7 +192,7 @@ li a:hover, .bioWords a:hover {
   width: 300px;
   justify-content: space-between;
   width: 250px;
-  margin-right: 20px;
+  /* margin-right: 20px; */
 }
 .content__button-div--main{
   height: 150px;
@@ -218,13 +230,18 @@ li a:hover, .bioWords a:hover {
 .content__pieChart__legend{
   text-align: -webkit-right;
   text-align: right;
-  margin: auto;
+  margin: auto 0;
 }
 .content__table{
   display: inline-table;
 }
-.content__table--compareAll, .content__table--compareTopics{
+/* .content__table--compareAll, .content__table--compareTopics{ */
   /* margin-top: 30px; */
+  /* width: 100%; */
+  /* display: block; */
+/* } */
+.content__table--compare{
+  margin-top: 30px;
   width: 100%;
   display: block;
 }
