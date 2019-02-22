@@ -49,10 +49,35 @@ class PsalmsLanding extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.browserCheck = this.browserCheck.bind(this);
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
+    this.browserCheck();
   }
+  
+
+
+  // check browser and alert if ie. from https://jsfiddle.net/alvaroAV/svvz7tkn/ 
+  browserCheck() {
+    let is_ie; 
+
+    function isIE() {
+      const ua = navigator.userAgent;
+      /* MSIE used to detect old browsers and Trident used to newer ones*/
+      is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
+      
+      return is_ie; 
+    }
+    // console.log(is_ie)
+    // ieIE();
+
+    /* Create an alert to show if the browser is IE or not */
+    if (isIE()){
+      alert('Hi! Looks like you\'re using Internet Explorer. This app isn\'t updated for IE and won\'t work.');
+    }   
+  }
+
 
   // comapre two forms submission button
   submitForm(e) {

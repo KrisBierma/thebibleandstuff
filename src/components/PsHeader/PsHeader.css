@@ -2,12 +2,13 @@
   background-color: #7b9139;
   /* box-shadow: 0 8px 6px -6px #999; */
   z-index: 100;
-  -webkit-box-shadow: 0 8px 6px -6px #999;
-  -moz-box-shadow: 0 8px 6px -6px #999;
-  box-shadow: 0 8px 6px -6px #999;
-  margin-bottom: 4px;
+  -webkit-box-shadow: 0px 3px 9px 0px #999;
+  -moz-box-shadow: 0px 3px 9px 0px #999;
+  box-shadow: 0px 3px 9px 0px #999;
+  /* margin-bottom: 4px; */
   padding: 0 40px;
   margin: 0;
+  position: relative;
 }
 .header__list{
   list-style: none;
