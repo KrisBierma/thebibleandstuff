@@ -80,35 +80,37 @@ class PsalmTableData extends Component {
 
   render() {
     return(
-      <table>
-        {/* <tbody className='content__table'> */}
-        <tbody className='table--word'>
-          <tr>
-            <th>Author</th>
-            <td>{this.state.author}</td>
-          </tr>
-          <tr>
-            <th>Book</th>
-            <td>{this.state.book}</td>
-          </tr>
-          {/* <tr>
-            <th>Headings</th>
-            <td>{this.state.headings}</td>
-          </tr> */}
-          <tr>
-            <th>First Verse</th>
-            <td>{this.state.firstVerse}</td>
-          </tr>
-          {/* <tr>
-            <th>Topic</th>
-            <td>{this.state.topic}</td>
-          </tr> */}
-          <tr>
-            <th>Summary</th>
-            <td>{this.state.summary}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className='content content--border'>
+        <table>
+          {/* <tbody className='content__table'> */}
+          <tbody className='table--word'>
+            <tr>
+              <th>Author</th>
+              <td>{this.state.author}</td>
+            </tr>
+            <tr>
+              <th>Book</th>
+              <td>{this.state.book}</td>
+            </tr>
+            {/* <tr>
+              <th>Headings</th>
+              <td>{this.state.headings}</td>
+            </tr> */}
+            <tr>
+              <th>First Verse</th>
+              <td>{this.state.firstVerse}</td>
+            </tr>
+            {/* <tr>
+              <th>Topic</th>
+              <td>{this.state.topic}</td>
+            </tr> */}
+            <tr>
+              <th>Summary</th>
+              <td>{this.state.summary}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     )
   }
 };

@@ -14,7 +14,7 @@ class PsalmsFaq extends Component {
   render() {
     return(
       <Container>
-        <PsHeader psalmId="FAQs" />
+        <PsHeader heading="FAQs" />
         <Row className='content-wrapper'>
           <Col>
             <Row>
@@ -24,6 +24,11 @@ class PsalmsFaq extends Component {
             <Row>
               <h2>What translation are you using?</h2>
               <p>I like the English Standard Version (ESV) because it takes out verse numbers and other references from the chapter. This makes it read like a normal book of poetry. <a title="Go to the ESV website" target='_blank' rel="noopener noreferrer" href='https://www.esv.org/' className='psalmLink'>This</a> is the website I used.</p>
+            </Row>
+            <Row>
+              <h2>Do you have copyright information?</h2>
+              <p>Why, yes, I do. Just kidding, no one asks this, but I do need to include it since they've been so generous to let me use it.</p>
+              <p>Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. You may not copy or download more than 500 consecutive verses of the ESV Bible or more than one half of any book of the ESV Bible.</p>              
             </Row>
             <Row>
               <h2>I have another question/comment/idea.</h2>

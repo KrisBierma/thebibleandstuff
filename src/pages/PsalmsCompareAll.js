@@ -42,7 +42,7 @@ class PsalmsCompareAll extends Component {
         };
 
         if (typeof data.author === 'object') {
-          console.log(data.author)
+          // console.log(data.author)
           data.author = data.author[0] + ', ' + data.author[1]
         }
         // push the data into the array of all chapters
@@ -103,16 +103,21 @@ class PsalmsCompareAll extends Component {
             // }
           };
         }}
-        getTdProps={(state, rowInfo, column, instance) => {
-          return {
-            onClick: (e) => {
-              console.log(rowInfo.original.chapter)
-              const chapterNum = rowInfo.original.chapter;
-              this.setState({chapterNum:chapterNum, changePage:true, id:'specificPsalm'})
-            }
-          }
-        }}
+        // getTdProps={(state, rowInfo, column, instance) => {
+        //   return {
+        //     onClick: (e) => {
+        //       console.log(rowInfo.original.chapter)
+        //       const chapterNum = rowInfo.original.chapter;
+        //       this.setState({chapterNum:chapterNum, changePage:true, id:'specificPsalm'})
+        //     }
+        //   }
+        // }}
       />
+
+      {/* Footnotes */}
+      <div className='footnote--compareAll'>
+        <p>All Bible passages are from the <a href='https://www.esv.org/' target='_blank' rel='noopener noreferrer'>"ESV."</a></p>
+      </div>
       </PsalmsCompareWrapper>
     )
   }

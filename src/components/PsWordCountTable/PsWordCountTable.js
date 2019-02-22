@@ -50,7 +50,7 @@ class PsWordCountTable extends Component {
   render() {
     // console.log(this.props)
     return(
-      <div className='content content--centered content__table'>
+      <div className='content  content--border content--centered content__table'>
         <table className='table--word'>
           <thead>
             <tr>

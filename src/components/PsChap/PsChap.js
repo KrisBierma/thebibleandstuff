@@ -46,7 +46,6 @@ class PsChap extends Component {
     // let apiKey = process.env.REACT_APP_ESV_API_KEY;
     // console.log(process.env.REACT_APP_ESV_API_KEY)
     // let passage = `Psalm ${this.state.chapterNum}`;
-    // console.log(this.state.passage)
     const passage = this.state.passage;
     const queryURL = 'https://api.esv.org/v3/passage/text/';
     const config = {
@@ -67,21 +66,30 @@ class PsChap extends Component {
 
     // build in resiliency: setTimeout, fallback, error msgs
     const timeout = 5000;
-    // console.log('-----------------------------------')
     axios.get(queryURL, config, timeout)
     .then((res) =>{
-      // console.log(res.data);
       // console.log(res.data.passages[0]);
       const results = res.data.passages[0].replace(/\n{3,}/g, '\n\n');
       // console.log(results);
+
+      // error only in Ps 48
+      const p = passage.split(' ');
+      if (p[1] === '48') {
+        setTimeout(() => {
+          this.setState({wholeChapter: results});
+        }, 500); 
+      }   
+
       this.setState({wholeChapter: results});
-      this.getWords(this.state.wholeChapter);
+      this.getWords(results);
       this.recurringLines();
     })
     .catch(error => {
       console.log(error);
       this.setState({wholeChapter: "There was an error getting this chapter from ESV. Please try again later!"})
     });
+
+
 
     // just gets first verse for data entry
     // const passage2 = `Psalm ${this.state.chapterNum}:1`;
@@ -110,14 +118,16 @@ class PsChap extends Component {
   // put api result into array, filter out unwanted words 
   // also counts words to find length of psalm
   getWords(string) {
-    // replace . with spaces. Split string at spaces into individual words in an array. Start a new array of objects to hold words and their frequency.
-    const words = string.replace(/[.,—;:!?“”‘\b’\b]/g, '').split(/\s/);
-    // console.log(words)
-
-    // put all to lowerCase except select words
     const wordsNotLowercase = ['I', 'Lord', 'LORD', 'God', 'O', 'Israel', 'Selah', 'Jerusalem', 'Babylon', 'Zion', 'David'];
     // find capitalized words not at the beginning of the sentence, add to wordsNotLowercase
+    console.log(string)
+    console.log()
 
+
+    // replace . with spaces. Split string at spaces into individual words in an array. Start a new array of objects to hold words and their frequency.
+    const words = string.replace(/[.,—;:!?“”‘\b’\b]/g, '').split(/\s/);
+
+    // put all to lowerCase except select words
     for (let i=0; i<words.length; i++) {
       if (!wordsNotLowercase.includes(words[i])) {
         words[i] = words[i].toLowerCase();
@@ -476,7 +486,7 @@ class PsChap extends Component {
     // console.log(this.props)
     // console.log(this.state.wholeChapter)
     return(
-      <p className={this.props.className}>{this.state.wholeChapter}</p>
+      <p className={`content--border ${this.props.className}`}>{this.state.wholeChapter}</p>
     )
   }
 }

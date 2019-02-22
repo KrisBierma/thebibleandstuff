@@ -44,7 +44,7 @@ class IndividualPsalm extends Component {
   }
 
   groupWordsParent(params, chap) {
-    console.log(params, chap)
+    // console.log(params, chap)
     this.setState({
       freq2: params
     })
@@ -73,14 +73,14 @@ class IndividualPsalm extends Component {
 
   // for child PsWordCountTable to rerender button when changing page
   flag() {
-    console.log('change flag button words')
+    // console.log('change flag button words')
     let buttonWords; 
     this.state.flag ? buttonWords = 'Group like words' : buttonWords = 'Ungroup like words';
     this.setState({
       flag:!this.state.flag,
       buttonWords: buttonWords
     });
-    console.log(buttonWords)
+    // console.log(buttonWords)
   }
 
   // only rend the area if there are frequent phrases
@@ -90,13 +90,13 @@ class IndividualPsalm extends Component {
     }
     else {
       return(
-        <div className='content content--fullWidth'>
+        <div className='content content--fullWidth content--border'>
           <h3>{this.state.frequentPhrasesTitle}</h3>
           <div className='content--columns'>
 
           {this.state.frequentPhrases.map((f) => {
             return(
-            <p key={f[0]+f[1]+'-'+f[5]+f[6]+f[10]+''+ f.length}>{f}</p>
+            <p key={f[0]+f[1]+'-'+ f[f.length/2] + f[Math.floor(Math.random() * 2)] + f[Math.floor(Math.random() * 2)] + ''+ f.length}>{f}</p>
             )})}
             </div>
         </div>      
@@ -158,14 +158,13 @@ class IndividualPsalm extends Component {
           {this.RenderFrequentPhrases()}
 
           {/* Psalm data */}
-          <div className='content' style={{marginLeft: '0px'}}>
-            <PsalmTableData chapterNum={this.state.chapterNum} />
-          </div>              
+          <PsalmTableData chapterNum={this.state.chapterNum} />
 
           {/* Footnotes */}
           <div className='footnote'>
             <p>The word count only shows words with a frequency of 2 or more.</p>
             <p>Grouping words takes out passive verbs, conjunctions, and articles, and it combines like terms.</p>
+            <p>All Bible passages are from the <a href='https://www.esv.org/' target='_blank' rel='noopener noreferrer'>"ESV."</a></p>
           </div>
 
           {this.renderButtons()}

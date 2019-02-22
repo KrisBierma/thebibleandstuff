@@ -124,16 +124,18 @@ class PsalmsComparison extends Component {
           </Row>
           <Row>
             <Col>
-              <div className='content' style={{marginLeft: '0px'}}>
-                <PsalmTableData chapterNum={this.state.psalm1} />
-              </div>
+              <PsalmTableData chapterNum={this.state.psalm1} />
             </Col>
             <Col>
-              <div className='content' style={{marginLeft: '0px'}}>
-                <PsalmTableData chapterNum={this.state.psalm2} />
-              </div>
+              <PsalmTableData chapterNum={this.state.psalm2} />
             </Col>
           </Row>       
+          {/* Footnotes */}
+          <div className='footnote'>
+            <p>The word count only shows words with a frequency of 2 or more.</p>
+            <p>Grouping words takes out passive verbs, conjunctions, and articles, and it combines like terms.</p>
+            <p>All Bible passages are from the <a href='https://www.esv.org/' target='_blank' rel='noopener noreferrer'>"ESV."</a></p>
+          </div>      
         </Col>
       </Row>
       <Footer></Footer>
