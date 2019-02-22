@@ -13,7 +13,8 @@ class PsChap extends Component {
       // newFreq2: [],
       count: '',
       groupedFreq: [],
-      data2: []
+      data2: [],
+      wordsNotLowercase: []
     }
     this.getPsalm = this.getPsalm.bind(this);
     this.getWords = this.getWords.bind(this);
@@ -70,7 +71,6 @@ class PsChap extends Component {
     .then((res) =>{
       // console.log(res.data.passages[0]);
       const results = res.data.passages[0].replace(/\n{3,}/g, '\n\n');
-      // console.log(results);
 
       // error only in Ps 48
       const p = passage.split(' ');
@@ -82,7 +82,7 @@ class PsChap extends Component {
 
       this.setState({wholeChapter: results});
       this.getWords(results);
-      this.recurringLines();
+      // this.recurringLines();
     })
     .catch(error => {
       console.log(error);
@@ -118,11 +118,32 @@ class PsChap extends Component {
   // put api result into array, filter out unwanted words 
   // also counts words to find length of psalm
   getWords(string) {
-    const wordsNotLowercase = ['I', 'Lord', 'LORD', 'God', 'O', 'Israel', 'Selah', 'Jerusalem', 'Babylon', 'Zion', 'David'];
+    const wordsNotLowercase = ['I', 'Lord', 'LORD', 'God', 'O', 'Israel', 'Selah', 'Babylon', 'Zion', 'David'];
     // find capitalized words not at the beginning of the sentence, add to wordsNotLowercase
-    console.log(string)
-    console.log()
+    const pattern = /(. [A-Z])\w+/g; // cap words
+    let result = string.match(pattern); // array of cap words
 
+    // go through results, take out letter+space, push to new array
+    const patt = /(. )/g;
+    let newString = [];
+    result.forEach(r => {
+      const newr = r.replace(patt, '');
+      newString.push(newr);     
+    });
+
+    // go through array of cap words, if not in wordsNotLowercase, push it; P22 has 'The' in the title
+    const promise1 = new Promise(function(resolve, reject) {
+      newString.forEach((r) => {
+        if (!wordsNotLowercase.includes(r) && r !== 'The') {wordsNotLowercase.push(r)}
+        }
+      )
+      resolve(wordsNotLowercase)
+    })
+
+    let that = this;
+    promise1.then(function(value) {
+      that.recurringLines(value);
+    });
 
     // replace . with spaces. Split string at spaces into individual words in an array. Start a new array of objects to hold words and their frequency.
     const words = string.replace(/[.,—;:!?“”‘\b’\b]/g, '').split(/\s/);
@@ -206,7 +227,7 @@ class PsChap extends Component {
   }
 
   // find recurring lines of 3+ words
-  recurringLines(props) {
+  recurringLines(wordsNotLowercase) {
     // change psalm to array
     let arr = this.state.wholeChapter.replace(/[.,;:!?“”‘\b’\b]/g, '').split(/\s/).filter(word => word !== '');
     // console.log(arr)
@@ -264,7 +285,21 @@ class PsChap extends Component {
           }
       }
     }
-    // console.log(phrases); 
+    for (let i = 0; i< phrases.length; i++) {
+      let p = phrases[i].split(' ');
+      let change = [];
+      for (let i=0; i<p.length; i++ ) {
+        let newp2 = p[i].charAt(0).toUpperCase()+p[i].slice(1);
+        if (wordsNotLowercase.includes(newp2)) {
+          change.push(i)
+        }
+      }
+      change.forEach(e => {
+        p[e] = p[e].charAt(0).toUpperCase()+p[e].slice(1)
+      })
+      phrases[i] = p.join(' ');
+    }
+
     // call the func in the parent 'individualPsalm' component to pass the data to it so it can get displayed
     this.props.frequentPhrases(phrases);
   }
@@ -307,60 +342,66 @@ class PsChap extends Component {
     const synonyms = [['God', 'LORD'], ['he', 'him', 'his', 'himself'], ['nor', 'not'], ['I', 'me', 'my', 'mine'], ['you', 'your'], ['their', 'they', 'them'], ['commands', 'command', 'commandment', 'commandments', 'precepts', 'statutes', 'law', 'decrees', 'decress', 'rules'], ['faith', 'faithful', 'faithfulness'], ['woman', 'women'], ['man', 'men'], ['who', 'whose'], ['child', 'children'], ['we', 'us', 'our'], ['mighty', 'mightier'], ['true', 'truth'], ['false', 'falsehood'], ['meditate', 'meditates', 'meditation']];
 
     // loop through the words frequency array (twice) for each pair of words
+    let flag = false;
     synonyms.forEach(s => {
-      // start with first word in the synonyms array
-      let s1 = s[0];
-      let firstSynIndex = '';
-      // loop through data2 array to see if s1 is in there
-      for (let i=0; i<data2.length; i++) {
-        // if s1 is there
-        if (data2[i].wordle === s1) {
-          // holds index of first word in the synonym array
-          firstSynIndex = data2.indexOf(data2[i]);
-          // start arrays to hold the synonyms found and their locations
-          let tempArr = [{'wordle': s[0], 'value': data2[i].value}];
-          let locations = [data2.indexOf(data2[i])];
+      // loop through each word in each syn array
+      for (let m=0; m<s.length; m++) {
+        let s1 = s[m];
+        let firstSynIndex = '';
+        for (let i=0; i<data2.length; i++) {
+          // if s1 is there
+          if (data2[i].wordle === s1) {
+            // holds index of first word in the synonym array
+            firstSynIndex = data2.indexOf(data2[i]);
+            // start arrays to hold the synonyms found and their locations
+            let tempArr = [{'wordle': s[m], 'value': data2[i].value}];
+            let locations = [data2.indexOf(data2[i])];
 
-          // loop through whole array x times to find if all the words are there. x is the length of the specific synonyms array
-          for (let j=1; j<s.length; j++) {
-            s1 = s[j];
-
-            for (let k=0; k<data2.length; k++){
-              // if more synonyms are found, add to temp arrays
-              if (data2[k].wordle === s1) {
-                tempArr.push(data2[k]);
-                locations.push(data2.indexOf(data2[k]));
+            // loop through whole array x times to find if all the words are there. x is the length of the specific synonyms array
+            // if the first word from the synArr that's found in the freq. list is NOT synArr[0], start this inner loop at m+1
+            for (let j=m+1; j<s.length; j++) {
+              s1 = s[j];
+              for (let k=0; k<data2.length; k++){
+                // if more synonyms are found, add to temp arrays
+                if (data2[k].wordle === s1) {
+                  tempArr.push(data2[k]);
+                  locations.push(data2.indexOf(data2[k]));
+                }
               }
             }
-          }
-          // consolidate all the found synonyms and values into once index (the first one of the synonyms array) of the data2 array and remove the other locations/values
-          let tempValue = tempArr.reduce(function(prev, cur) {
-            return prev + cur.value;
-          }, 0);
-          let tempWords = tempArr[0].wordle;
-          for (let i = 1; i<tempArr.length; i++) {
-            tempWords += `, ${tempArr[i].wordle}`
-          }      
+            // consolidate all the found synonyms and values into once index (the first one of the synonyms array) of the data2 array and remove the other locations/values
+            let tempValue = tempArr.reduce(function(prev, cur) {
+              return prev + cur.value;
+            }, 0);
+            let tempWords = tempArr[0].wordle;
+            for (let i = 1; i<tempArr.length; i++) {
+              tempWords += `, ${tempArr[i].wordle}`
+            }      
 
-          // set the new word and value
-          data2[firstSynIndex].wordle = tempWords;
-          data2[firstSynIndex].value = tempValue;
-
-          locations.sort(function(a,b){return b-a;});
-          
-          // order locations array in descending order so the splicing happens from back to front
-          for (let i=0; i<tempArr.length; i++){
-            if (locations[i] !== firstSynIndex) {
-              data2.splice(locations[i], 1);
+            // set the new word and value
+            data2[firstSynIndex].wordle = tempWords;
+            data2[firstSynIndex].value = tempValue;
+            locations.sort(function(a,b){return b-a;});
+            
+            // order locations array in descending order so the splicing happens from back to front
+            for (let i=0; i<tempArr.length; i++){
+              if (locations[i] !== firstSynIndex) {
+                data2.splice(locations[i], 1);
+              }
             }
+            flag = true; 
           }
-
           // stop the first loop once once the first synonym is found
-          break;
+          if (flag) break;
         }
-      }
+        if (flag) break;
 
-    })
+      }
+      // if the first word in the synArr WAS found, stop the outer 'm' loop; otherwise, check the next word in the current synArr
+      if (flag) {
+        flag = false;
+      }
+    }) // end synonyms.forEach
 
     // combine singular and plurals
     // first check to see if it's a singual word or grouped word already
@@ -370,7 +411,6 @@ class PsChap extends Component {
         skipped.push(data2.indexOf(w));
       }      
     })
-
 
     // check all the ungrouped words for plurals (just adding -s, -es, -ness)
     sortingFunctions(1, 's');
@@ -401,7 +441,7 @@ class PsChap extends Component {
             let l1 = w1.length;
             let l2 = w2.length;
             let greater, lesser;
-// console.log(w1, w2)
+
             // find the greater and lesser number
             function findThem() {
               return l1 > l2 ? (greater = w1, lesser = w2) : (greater = w2, lesser = w1)
@@ -421,7 +461,6 @@ class PsChap extends Component {
                 return l1 > l2 ? (greaterObj = data2[i], lesserObj = data2[j], greaterIndex = data2.indexOf(data2[i]), lesserIndex = data2.indexOf(data2[j])) : (greaterObj = data2[j], lesserObj = data2[i], greaterIndex = data2.indexOf(data2[j]), lesserIndex = data2.indexOf(data2[i]))
               };
               findThem2();
-// console.log(i,j, w1, w2)
 
               // compare letter by letter
               let flagCount = 0;
@@ -446,13 +485,11 @@ class PsChap extends Component {
                   return prev + cur.value;
                 }, 0);
                 let tempWords = tempArr[0].wordle + `(${toFind})`; 
-
                 // set the new word and value
                 data2[lesserIndex].wordle = tempWords;
                 data2[lesserIndex].value = tempValue;
-// console.log(tempArr, tempValue, tempWords)
                 locations.sort(function(a,b){return b-a;});
-// console.log(data2)                 
+
                 // order locations array in descending order so the splicing happens from back to front
                 for (let i=0; i<tempArr.length; i++){
                   if (locations[i] !== lesserIndex) {

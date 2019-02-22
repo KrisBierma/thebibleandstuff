@@ -195,80 +195,83 @@ console.log('here')
     let flag = false; // not done checking the results
     this.setState({resultsClassName: '', results: ''}); // reset results to one column
     // console.log("page "+page)
-    const config = {
-      headers: {
-        'Authorization': process.env.REACT_APP_ESV_API_KEY
-      },
-      params : {
-        'q': word,
-        'page-size': 100,
-        'page': page
-      }
-    };   
-    const timeout = 5000;
-    axios.get(queryURL, config, timeout)
-    .then((res) => {
-      // console.log(res.data.results);
-      // all results from Bible on specified page
-      const results = res.data.results;
-      console.log("results length: "+results.length)
-console.log(results)
-      // if no results, stop function altogether
-      if (results.length === 0) {
-        return
-      };
+    const sendQueryToo = (page) => {
+      const config = {
+        headers: {
+          'Authorization': process.env.REACT_APP_ESV_API_KEY
+        },
+        params : {
+          'q': word,
+          'page-size': 100,
+          'page': page
+        }
+      };   
+      const timeout = 5000;
+      axios.get(queryURL, config, timeout)
+      .then((res) => {
+        // console.log(res.data.results);
+        // all results from Bible on specified page
+        const results = res.data.results;
+        console.log("results length: "+results.length)
+  console.log(results)
+        // if no results, stop function altogether
+        if (results.length === 0) {
+          return
+        };
 
-      let versesFound = [];
-      results.forEach(p => {
-        const str = p.reference;
-        let book = str.split(' ');
-        // if the book is a number book, book = the second word, ie. Peter, Timothy
-        if (book[0] === '1' || book[0] === '2' || book[0] === '3') {
-          book = book[1];
-        }
-        else {
-          book = book[0]; // else it's the first word, ie Genesis, Exodus, Song
-        }
-        // if the results include books after Psalms, stop function
-        if (booksAfterPsalms.includes(book)) {
-          flag = true; // done checking results
-          return;
-        }
-        // if results have psalms, push reference into versesFound
-        else if (str.startsWith('Psalm')){
-          versesFound.push(p.reference)
-        }
+        let versesFound = [];
+        results.forEach(p => {
+          const str = p.reference;
+          let book = str.split(' ');
+          // if the book is a number book, book = the second word, ie. Peter, Timothy
+          if (book[0] === '1' || book[0] === '2' || book[0] === '3') {
+            book = book[1];
+          }
+          else {
+            book = book[0]; // else it's the first word, ie Genesis, Exodus, Song
+          }
+          // if the results include books after Psalms, stop function
+          if (booksAfterPsalms.includes(book)) {
+            flag = true; // done checking results
+            return;
+          }
+          // if results have psalms, push reference into versesFound
+          else if (str.startsWith('Psalm')){
+            versesFound.push(p.reference)
+          }
 
+        })
+  console.log(versesFound.length, page, flag)
+        // if less than 100 results and none in Psalms (or the results start in any book after the psalms) then return 'wasn't found' msg
+        if (versesFound.length === 0 && results.length < 100 && flag) {
+          versesFound.push('This word wasn\'t found in the Psalms.');
+          this.setState({versesFound:versesFound})
+        }
+        // if 100 results but not in psalms, send query again until psalms found
+        else if (versesFound.length === 0 && page < 6 && !flag) {
+          page++;
+          sendQueryToo(page); // recursively call this const func
+          versesFound.push('Searching...');
+          this.setState({versesFound:versesFound})
+        }
+        else if (versesFound.length > 0) {
+          // set columns to display results
+          this.setState({
+            resultsClassName: 'results--columns',
+            versesFound:versesFound
+          });
+        }
+        // if no verses were found and the flag signals finding a book after psalms, the word wasn't found
+        else if (versesFound.length === 0 && flag) {
+          versesFound.push('This word wasn\'t found in the Psalms.');
+          this.setState({versesFound:versesFound})          
+        }
       })
-console.log(versesFound.length, page, flag)
-      // if less than 100 results and none in Psalms (or the results start in any book after the psalms) then return 'wasn't found' msg
-      if (versesFound.length === 0 && results.length < 100 && flag) {
-        versesFound.push('This word wasn\'t found in the Psalms.');
-        this.setState({versesFound:versesFound})
-      }
-      // if 100 results but not in psalms, send query again until psalms found
-      else if (versesFound.length === 0 && page < 6 && !flag) {
-        page++;
-        this.sendQuery(page)
-        versesFound.push('Searching...');
-        this.setState({versesFound:versesFound})
-      }
-      else if (versesFound.length > 0) {
-        // set columns to display results
-        this.setState({
-          resultsClassName: 'results--columns',
-          versesFound:versesFound
-        });
-      }
-      // if no verses were found and the flag signals finding a book after psalms, the word wasn't found
-      else if (versesFound.length === 0 && flag) {
-        versesFound.push('This word wasn\'t found in the Psalms.');
-        this.setState({versesFound:versesFound})          
-      }
-    })
-    .catch(error => {
-      console.log(error)
-    })
+      .catch(error => {
+        console.log(error)
+      })
+    } // end sendQuery2
+  sendQueryToo(page); // call the const function above
   }
 
   getData() {
