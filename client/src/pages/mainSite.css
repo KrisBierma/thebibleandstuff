@@ -1,0 +1,11 @@
+.content-wrapper__main{
+  padding: 5% 10%;
+  margin:0;
+  background-color: #2F3E67;
+  justify-content: space-between;
+  background-image: url('../assets//images/brushed-alum-dark.png');
+  /* background pattern from https://www.transparenttextures.com/ */
+}
+.list__mainSite{
+  color: black;
+}

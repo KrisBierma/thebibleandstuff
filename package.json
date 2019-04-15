@@ -1,34 +1,34 @@
 {
   "name": "thebibleandstuff",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "axios": "^0.18.0",
-    "connect": "^3.6.6",
-    "connect-history-api-fallback": "^1.6.0",
-    "firebase": "^5.8.0",
-    "history": "^4.7.2",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-easy-chart": "^1.0.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "^2.1.5",
-    "react-table": "^6.8.6",
-    "reactstrap": "^7.1.0"
-  },
+  "version": "1.0.0",
+  "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:prod": "node server.js",
+    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
+    "client": "cd client && npm run start",
+    "install": "cd client && yarn install",
+    "build": "cd client && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KrisBierma/thebibleandstuff.git"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KrisBierma/thebibleandstuff/issues"
+  },
+  "homepage": "https://github.com/KrisBierma/thebibleandstuff#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "if-env": "^1.0.4",
+    "mysql": "^2.16.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1"
+  }
 }
