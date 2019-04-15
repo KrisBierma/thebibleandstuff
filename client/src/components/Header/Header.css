@@ -1,4 +1,4 @@
-.header--main{
+.header{
   /* background-color: #7b9139; */
   /* box-shadow: 0 8px 6px -6px #999; */
   z-index: 100;
@@ -9,4 +9,39 @@
   padding: 0 40px;
   margin: 0;
   position: relative;
+}
+.header--main{
+  background-color: white;
+  /* background-color: palevioletred; */
+}
+.header--psalms{
+  background-color: #7b9139;
+}
+.header__list{
+  list-style: none;
+  text-align: right;
+  width: 90%;
+  margin:auto;
+}
+.header__list--main li a{
+  color: black;
+}
+.header__column{
+  margin: auto;
+}
+.header__column--center{
+  text-align: center;
+  /* width: 50%; */
+  flex-grow: 2;
+}
+.header__column a{
+  color: white;
+}
+.nav-item a{
+  color: black;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+.nav-item a:hover{
+  color: blue;
 }

@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {Container, Row, Col} from 'reactstrap';
 import './Psalms.css';
-import PsHeader from '../components/PsHeader';
+import  { Header, PsLinks }  from '../components/Header';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 // fix link className
 // add contact me form
@@ -12,7 +13,11 @@ class PsalmsFaq extends Component {
   render() {
     return(
       <Container>
-        <PsHeader heading="FAQs" />
+        <Header 
+          headerClass='header--psalms' 
+          link={<Link to={'/psalms'}><h1>{`FAQs`}</h1></Link>}
+          links={<PsLinks />}
+          />   
         <Row className='content-wrapper'>
           <Col className='content content--border'>
             <h4>What is this site?</h4>

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap';
 import './Psalms.css';
-import PsHeader from '../components/PsHeader';
+import  { Header, PsLinks } from '../components/Header';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import firebase from '../components/Firebase/firebase';
@@ -215,7 +215,11 @@ class PsalmsLanding extends Component {
 
     return(
       <Container>
-        <PsHeader heading="Psalms" />
+        <Header 
+          headerClass='header--psalms' 
+          link={<Link to={'/psalms'}><h1>{`Psalms`}</h1></Link>}
+          links={<PsLinks />}
+          />   
         <Row className='content-wrapper content-wrapper__landingPage'>
           <Col className='mainCol'>
             <div className='content content--border'>

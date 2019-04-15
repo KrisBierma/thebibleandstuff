@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Button } from 'reactstrap';
 // import axios from 'axios';
-import PsHeader from '../components/PsHeader';
+import  { Header, PsLinks }  from '../components/Header';
 import Footer from '../components/Footer';
 // import firebase from '../components/Firebase/firebase';
 import PsalmTableData from '../components/psalmTableData';
@@ -140,8 +140,11 @@ class IndividualPsalm extends Component {
     // console.log(this.state.changePage)
     return(
       <Container>
-        <PsHeader heading={`Psalm ${this.state.chapterNum}`} />
-        
+        <Header 
+          headerClass='header--psalms' 
+          link={<Link to={'/psalms'}><h1>{`Psalm ${this.state.chapterNum}`}</h1></Link>}
+          links={<PsLinks />}
+          />        
         <Row className='content-wrapper'>
           {/* The actual chapter */}
           <PsChap 

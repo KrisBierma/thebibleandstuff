@@ -1,11 +1,12 @@
 // compares two psalms
 import React, { Component } from 'react';
 import { Row, Col, Container } from 'reactstrap';
-import PsHeader from '../components/PsHeader';
+import  { Header, PsLinks }  from '../components/Header';
 import Footer from '../components/Footer';
 import PsChap from '../components/PsChap';
 import PsalmTableData from '../components/psalmTableData';
 import PsWordCountTable from '../components/PsWordCountTable';
+import { Link } from 'react-router-dom';
 
 class PsalmsComparison extends Component {
   constructor(props){
@@ -88,7 +89,11 @@ class PsalmsComparison extends Component {
 
     return(
     <Container>
-      <PsHeader heading={`Psalms ${this.state.psalm1} and ${this.state.psalm2}`} />
+      <Header 
+          headerClass='header--psalms' 
+          link={<Link to={'/psalms'}><h1>{`Psalms ${this.state.psalm1} and ${this.state.psalm2}`}</h1></Link>}
+          links={<PsLinks />}
+          />  
 
       <Row className='content-wrapper'>
         <Col>

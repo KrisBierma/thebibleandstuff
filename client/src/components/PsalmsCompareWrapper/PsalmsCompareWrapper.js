@@ -1,12 +1,16 @@
 import React from 'react';
 import Footer from '../Footer';
 import { Container, Row, Button } from 'reactstrap';
-import PsHeader from '../PsHeader';
+import { Header, PsLinks } from '../Header';
 import { Link } from 'react-router-dom';
 
 const PsalmsCompareWrapper = (props) => (
   <Container>
-    <PsHeader heading={props.heading}></PsHeader>
+    <Header 
+      headerClass='header--psalms' 
+      link={<Link to={'/psalms'}><h1>{`${props.heading}`}</h1></Link>}
+      links={<PsLinks />}
+    />   
     <Row className='content-wrapper'>
     <div className='content content--border content--flex content--fullWidth'>
 
